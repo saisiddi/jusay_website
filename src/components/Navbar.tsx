@@ -7,7 +7,7 @@ import StarBorder from "./StarBorder";
 import "./StarBorder.css";
 
 const DOWNLOAD_URL =
-  "https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=28f7ccbe-c1e6-4996-9e13-45700324f5f3";
+  "https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=edca097e-fa85-4cca-8471-b59d29832104";
 
 const navItems = [
   { label: "Features", href: "#features" },

@@ -276,7 +276,7 @@ const Hero = () => {
           className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4"
         >
           <motion.a
-            href="https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=28f7ccbe-c1e6-4996-9e13-45700324f5f3"
+            href="https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=edca097e-fa85-4cca-8471-b59d29832104"
             whileHover={{ backgroundColor: "#2e1a0e", boxShadow: "0 8px 32px rgba(26,10,14,0.35)" }}
             whileTap={{ scale: 0.97 }}
             className="inline-flex items-center gap-2.5 px-8 py-3.5 text-white font-bold text-sm transition-all"
