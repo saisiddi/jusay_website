@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -33,21 +34,33 @@ const values = [
 const founders = [
   {
     name: "Aishwanth M S",
-    role: "Co-Founder & Developer",
+    role: "CEO & Founder",
     email: "aishwanth@juskoe.in",
     linkedin: "https://www.linkedin.com/in/aishwanth/",
-    bio: "Aishwanth is a full-stack developer and AI enthusiast who built Juskoe from the ground up. He designed the app to solve his own productivity challenges - and ended up building a tool that thousands of people now rely on every day.",
+    bio: "Aishwanth is a full-stack developer and AI entrepreneur who architected Juskoe from the ground up. As CEO, he leads product vision, engineering strategy, and the mission to make voice the universal input layer for every desktop application. He built Juskoe to solve his own productivity frustrations - and it's now relied upon by thousands of users worldwide.",
   },
   {
-    name: "Srinivasan V",
+    name: "Vishwajeeth Rao B",
     role: "Co-Founder",
-    email: "srinivasan@juskoe.in",
-    linkedin: "https://www.linkedin.com/in/srinivasan-v-014b20363/",
-    bio: "Srinivasan brings strategic vision and product thinking to Juskoe. His focus on user experience and growth ensures that every feature we ship genuinely improves how people work and communicate.",
+    email: "vishwajeeth@juskoe.in",
+    linkedin: "https://www.linkedin.com/in/vishwajeeth-rao-b-7a1764381/",
+    bio: "Vishwajeeth brings strategic product thinking and operational excellence to Juskoe. As Co-Founder, he drives user growth, partnerships, and the overall product roadmap - ensuring every feature we ship genuinely improves how people work and communicate with voice AI technology.",
+  },
+  {
+    name: "Govind D S",
+    role: "CTO",
+    email: "govind@juskoe.in",
+    linkedin: "https://www.linkedin.com/in/govind-ds-16280135/",
+    bio: "Govind leads the technical architecture and engineering teams at Juskoe. As CTO, he oversees the AI/ML pipeline, speech-to-text inference, system-level integrations, and cloud infrastructure - ensuring Juskoe delivers blazing-fast, accurate voice recognition across Windows and macOS with enterprise-grade reliability.",
   },
 ];
 
 const About = () => {
+  useEffect(() => {
+    document.title = "About Juskoe - Meet the Founders | AI Voice Assistant";
+    return () => { document.title = "Juskoe"; };
+  }, []);
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#faf9ff" }}>
       <Navbar />
@@ -210,8 +223,8 @@ const About = () => {
         </div>
       </section>
 
-      {/* Co-Founders Section */}
-      <section style={{ padding: "80px 24px", maxWidth: 900, margin: "0 auto" }}>
+      {/* Meet the Founders Section */}
+      <section style={{ padding: "80px 24px", maxWidth: 960, margin: "0 auto" }}>
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -219,13 +232,26 @@ const About = () => {
           variants={fadeUp}
           custom={0}
         >
-          <h2 style={{ fontSize: 32, fontWeight: 700, marginBottom: 32, textAlign: "center", color: "#2e2d2d" }}>
+          <h2 style={{ fontSize: 32, fontWeight: 700, marginBottom: 12, textAlign: "center", color: "#2e2d2d" }}>
             Meet the Founders
           </h2>
+          <p
+            style={{
+              fontSize: 16,
+              color: "#666",
+              textAlign: "center",
+              marginBottom: 40,
+              maxWidth: 560,
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
+          >
+            We're a small, passionate team on a mission to make voice the fastest way to get text into any app.
+          </p>
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
               gap: 24,
             }}
           >
@@ -243,11 +269,14 @@ const About = () => {
                   backgroundColor: "#fff",
                   border: "1px solid rgba(124,58,237,0.1)",
                   boxShadow: "0 4px 20px rgba(124,58,237,0.08)",
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
                 }}
               >
                 <h3 style={{ fontSize: 22, fontWeight: 700, marginBottom: 4, color: "#2e2d2d" }}>{f.name}</h3>
                 <p style={{ fontSize: 14, color: "#7C3AED", fontWeight: 600, marginBottom: 16 }}>
-                  {f.role} - 16xStudios
+                  {f.role}{f.name === "Aishwanth M S" ? " — 16xStudios" : ""}
                 </p>
                 <p
                   style={{
@@ -255,11 +284,12 @@ const About = () => {
                     lineHeight: 1.8,
                     color: "#555",
                     marginBottom: 20,
+                    flex: 1,
                   }}
                 >
                   {f.bio}
                 </p>
-                <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
                   <a
                     href={f.linkedin}
                     target="_blank"

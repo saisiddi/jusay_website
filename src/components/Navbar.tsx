@@ -70,8 +70,8 @@ const Navbar = () => {
               }}
             >
               {/* Logo */}
-              <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", flexShrink: 0 }}>
-                <img src={logo} alt="juskoe" style={{ height: 28, width: 28 }} />
+              <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", flexShrink: 0, userSelect: "none", WebkitUserSelect: "none" }}>
+                <img src={logo} alt="juskoe" style={{ height: 28, width: 28, userSelect: "none", WebkitUserSelect: "none", WebkitUserDrag: "none" }} draggable={false} />
                 <span style={{ lineHeight: 1, fontSize: 18 }}>
                   <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 800, color: "#2e2d2d" }}>jus</span>
                   <span style={{ fontFamily: "'Times New Roman', Times, Georgia, serif", fontStyle: "italic", fontWeight: 700, color: "#2e2d2d" }}>

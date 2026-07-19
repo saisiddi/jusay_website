@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/juskoe-logo.png";
 import { Twitter, Mail } from "lucide-react";
 
@@ -62,6 +63,23 @@ const GlowLetter = ({ char }: { char: string }) => {
 };
 
 const Footer = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleHashClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      e.preventDefault();
+      const id = href.replace("#", "");
+      if (location.pathname !== "/") {
+        navigate("/" + href);
+        return;
+      }
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    },
+    [location.pathname, navigate]
+  );
+
   return (
     <footer
       style={{
@@ -146,21 +164,36 @@ const Footer = () => {
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
                 {links.map((link) => (
                   <li key={link.label}>
-                    <motion.a
-                      href={link.href}
-                      whileHover={{
-                        color: "#7C3AED",
-                        textShadow: "0 0 12px rgba(124,58,237,0.3)",
-                      }}
-                      style={{
-                        fontSize: 12,
-                        color: "rgba(46,45,45,0.5)",
-                        textDecoration: "none",
-                        transition: "color 0.2s",
-                      }}
-                    >
-                      {link.label}
-                    </motion.a>
+                    {link.href.startsWith("#") ? (
+                      <motion.a
+                        href={link.href}
+                        onClick={(e) => handleHashClick(e, link.href)}
+                        whileHover={{ color: "#7C3AED", textShadow: "0 0 12px rgba(124,58,237,0.3)" }}
+                        style={{
+                          fontSize: 12,
+                          color: "rgba(46,45,45,0.5)",
+                          textDecoration: "none",
+                          transition: "color 0.2s",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {link.label}
+                      </motion.a>
+                    ) : (
+                      <Link
+                        to={link.href}
+                        style={{
+                          fontSize: 12,
+                          color: "rgba(46,45,45,0.5)",
+                          textDecoration: "none",
+                          transition: "color 0.2s",
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.color = "#7C3AED"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(46,45,45,0.5)"; }}
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

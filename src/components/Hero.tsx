@@ -324,7 +324,8 @@ const Hero = () => {
             src={appHero}
             alt="juskoe app interface"
             className="w-full rounded-t-2xl"
-            style={{ display: "block", minHeight: 200, transform: "scale(1.02)", transformOrigin: "top center" }}
+            style={{ display: "block", minHeight: 200, transform: "scale(1.02)", transformOrigin: "top center", userSelect: "none", WebkitUserSelect: "none", WebkitUserDrag: "none" }}
+            draggable={false}
           />
           {/* Fade-out gradient at bottom — matches section bg */}
           <div
