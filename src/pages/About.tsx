@@ -48,10 +48,10 @@ const founders = [
   },
   {
     name: "Govind D S",
-    role: "CTO",
+    role: "Co-Founder & CTO",
     email: "govind@juskoe.in",
-    linkedin: "https://www.linkedin.com/in/govind-ds-16280135/",
-    bio: "Govind leads the technical architecture and engineering teams at Juskoe. As CTO, he oversees the AI/ML pipeline, speech-to-text inference, system-level integrations, and cloud infrastructure - ensuring Juskoe delivers blazing-fast, accurate voice recognition across Windows and macOS with enterprise-grade reliability.",
+    linkedin: "https://www.linkedin.com/in/govind-ds-162801355/",
+    bio: "Govind leads the technical architecture and engineering teams at Juskoe. As Co-Founder & CTO, he oversees the AI/ML pipeline, speech-to-text inference, system-level integrations, and cloud infrastructure - ensuring Juskoe delivers blazing-fast, accurate voice recognition across Windows and macOS with enterprise-grade reliability.",
   },
 ];
 
@@ -111,9 +111,7 @@ const About = () => {
               marginRight: "auto",
             }}
           >
-            Juskoe is developed by <strong style={{ color: "#2e2d2d" }}>16xStudios</strong>, a
-            product studio focused on building AI-powered tools that make everyday computing faster
-            and more natural.
+            Juskoe is a universal AI-powered voice assistant that works system-wide on Windows and macOS.
           </motion.p>
         </div>
       </section>
@@ -276,7 +274,7 @@ const About = () => {
               >
                 <h3 style={{ fontSize: 22, fontWeight: 700, marginBottom: 4, color: "#2e2d2d" }}>{f.name}</h3>
                 <p style={{ fontSize: 14, color: "#7C3AED", fontWeight: 600, marginBottom: 16 }}>
-                  {f.role}{f.name === "Aishwanth M S" ? " — 16xStudios" : ""}
+                  {f.role}
                 </p>
                 <p
                   style={{

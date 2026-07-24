@@ -224,9 +224,9 @@ const Contact = () => {
                 border: "1px solid rgba(124,58,237,0.1)",
               }}
             >
-              <p style={{ fontSize: 14, fontWeight: 700, marginBottom: 4, color: "#2e2d2d" }}>16xStudios</p>
+              <p style={{ fontSize: 14, fontWeight: 700, marginBottom: 4, color: "#2e2d2d" }}>Juskoe</p>
               <p style={{ fontSize: 13, color: "#888", lineHeight: 1.6, margin: 0 }}>
-                Building AI-powered productivity tools
+                AI-powered voice-to-text for every app
               </p>
             </div>
           </motion.div>

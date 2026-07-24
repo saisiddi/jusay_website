@@ -82,7 +82,7 @@ To exercise these rights, contact us at support@juskoe.in.`,
 
 • Email: support@juskoe.in
 • Phone: +91 8608208309
-• Company: 16xStudios`,
+• Company: Juskoe`,
     },
   ];
 

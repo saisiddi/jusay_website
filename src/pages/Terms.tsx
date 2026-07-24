@@ -8,7 +8,7 @@ const Terms = () => {
       title: "1. Acceptance of Terms",
       content: `By downloading, installing, or using Juskoe ("the Software"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Software.
 
-These Terms constitute a legally binding agreement between you and 16xStudios ("Company", "we", "us") regarding your use of the Juskoe application.`,
+These Terms constitute a legally binding agreement between you and Juskoe ("Company", "we", "us") regarding your use of the Juskoe application.`,
     },
     {
       title: "2. Description of Service",
@@ -49,7 +49,7 @@ We reserve the right to terminate accounts that violate these terms.`,
     },
     {
       title: "5. Intellectual Property",
-      content: `The Juskoe application, including its design, code, branding, and documentation, is the intellectual property of 16xStudios. All rights are reserved.
+      content: `The Juskoe application, including its design, code, branding, and documentation, is the intellectual property of Juskoe. All rights are reserved.
 
 You are granted a non-exclusive, non-transferable license to use the Software for personal or commercial productivity purposes. This license does not transfer any ownership rights.`,
     },
@@ -76,7 +76,7 @@ You are solely responsible for reviewing AI-generated output before use. Juskoe 
     },
     {
       title: "8. Limitation of Liability",
-      content: `TO THE MAXIMUM EXTENT PERMITTED BY LAW, 16xStudios SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING FROM YOUR USE OF THE SOFTWARE.
+      content: `TO THE MAXIMUM EXTENT PERMITTED BY LAW, Juskoe SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING FROM YOUR USE OF THE SOFTWARE.
 
 Our total liability shall not exceed the amount you paid for the Software in the 12 months preceding the claim.`,
     },
@@ -94,7 +94,7 @@ Our total liability shall not exceed the amount you paid for the Software in the
 
 • Email: support@juskoe.in
 • Phone: +91 8608208309
-• Company: 16xStudios`,
+• Company: Juskoe`,
     },
   ];
 
