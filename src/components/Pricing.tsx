@@ -59,7 +59,7 @@ const getPlans = (isIndia: boolean) => [
     label: "Pro Plan",
     price: null,
     period: null,
-    monthlyPrice: isIndia ? "₹359" : "$10",
+    monthlyPrice: isIndia ? "₹49" : "$10",
     yearlyPrice: isIndia ? "₹300" : "$8",
 
     icon: Crown,
@@ -350,6 +350,14 @@ const Pricing = () => {
                       </span>
                     </div>
 
+                    {isPro && !isAnnual && (
+                      <p
+                        className="text-[11px] font-bold mb-1"
+                        style={{ color: "#7C3AED" }}
+                      >
+                        🎁 1+1 — pay 1 month, get 2
+                      </p>
+                    )}
 
                   </div>
 
