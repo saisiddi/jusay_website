@@ -29,14 +29,21 @@ describe("buildCheckoutUrl", () => {
     expect(url.searchParams.get("plan")).toBe("pro_monthly");
   });
 
-  it("omits firstMonthFree unless the edge function granted it", () => {
+  it("omits bonusMonth unless the edge function granted the 1+1 offer", () => {
     const without = new URL(buildCheckoutUrl("https://x.dev", base));
-    expect(without.searchParams.has("firstMonthFree")).toBe(false);
+    expect(without.searchParams.has("bonusMonth")).toBe(false);
 
     const withFlag = new URL(
-      buildCheckoutUrl("https://x.dev", { ...base, firstMonthFree: true })
+      buildCheckoutUrl("https://x.dev", { ...base, bonusMonth: true })
     );
-    expect(withFlag.searchParams.get("firstMonthFree")).toBe("1");
+    expect(withFlag.searchParams.get("bonusMonth")).toBe("1");
+  });
+
+  it("never advertises the old firstMonthFree param", () => {
+    const url = new URL(
+      buildCheckoutUrl("https://x.dev", { ...base, bonusMonth: true })
+    );
+    expect(url.searchParams.has("firstMonthFree")).toBe(false);
   });
 
   it("encodes values that need escaping and never double-slashes the path", () => {

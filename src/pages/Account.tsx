@@ -272,14 +272,15 @@ const Account = () => {
                   ) : (
                     <Sparkles style={{ width: 14, height: 14 }} aria-hidden="true" />
                   )}
-                  {upgrading ? "Starting checkout…" : "Upgrade to Pro — first month free"}
+                  {upgrading ? "Starting checkout…" : "Upgrade to Pro — 1+1, pay 1 month get 2"}
                 </button>
               )}
             </div>
 
             {!isPro && (
               <p style={{ fontSize: 11, color: "rgba(46,45,45,0.4)", marginTop: 12, lineHeight: 1.6 }}>
-                First month free for new Pro users. Cancel anytime from Jusay app settings.
+                New Pro users get 1+1: pay ₹49 today and get 2 months, then ₹49/month.
+                Cancel anytime from Jusay app settings.
               </p>
             )}
 

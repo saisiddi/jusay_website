@@ -152,8 +152,8 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
     var email=p.get('email')||'',name=p.get('name')||'';
     var plan=p.get('plan')||'pro_monthly';
     var plans={
-        pro_monthly:{name:'Pro Monthly',html:'₹49 <span>/month</span><br><span style="font-size:12px;color:#059669;font-weight:500">🎁 1+1 — pay 1 month, get 2</span>',badge:'MONTHLY',total:'₹49/mo'},
-        pro_annual:{name:'Pro Annual',html:'₹300 <span>/mo</span><br><span style="font-size:12px;color:rgba(0,0,0,0.35);font-weight:400">Billed ₹3,600/year</span>',badge:'ANNUAL',total:'₹3,600/yr'}
+        pro_monthly:{name:'Pro Monthly',html:'₹49 <span>/month</span>',badge:'MONTHLY',total:'₹49/mo'},
+        pro_annual:{name:'Pro Annual',html:'₹41 <span>/mo</span><br><span style="font-size:12px;color:rgba(0,0,0,0.35);font-weight:400">Billed ₹490/year</span>',badge:'ANNUAL',total:'₹490/yr'}
     };
     var d=plans[plan]||plans.pro_monthly;
     document.getElementById('planName').textContent=d.name;
@@ -161,9 +161,15 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
     document.getElementById('planBadge').textContent=d.badge;
     var btn=document.getElementById('payBtn');
     var isTrial=false;
-    // First-time Pro users get month 1 free: the create-subscription edge
-    // function sets start_at +30d and reports it back through this flag.
-    var firstMonthFree=(p.get('firstMonthFree')==='1'&&plan==='pro_monthly');
+    // 1+1 offer for first-time Pro users: they pay ₹49 today (Razorpay upfront
+    // addon amount) and get 60 days of Pro; the next ₹49 is charged on day 61
+    // (Razorpay start_at). create-subscription decides eligibility and reports
+    // it back as `bonusMonth`. `firstMonthFree` is the legacy param name still
+    // sent by desktop builds shipped before this change.
+    var bonusMonth=((p.get('bonusMonth')==='1'||p.get('firstMonthFree')==='1')&&plan==='pro_monthly');
+    // Date of the first recurring charge, i.e. day 61.
+    var nextChargeDate=new Date(Date.now()+60*24*60*60*1000)
+        .toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
 
     if(!sid||!kid){
         btn.textContent='Invalid Link';
@@ -173,10 +179,13 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
     }
     btn.disabled=false;
     btn.textContent='Pay '+d.total;
-    if(firstMonthFree){
-        document.getElementById('planPrice').innerHTML='₹0 <span>for month 1</span><br><span style="font-size:12px;color:#059669;font-weight:500">🎁 1+1 — pay 1 month, get 2</span>';
+    if(bonusMonth){
+        // Pay ₹49 once today, 2 months of access, next ₹49 on day 61.
+        document.getElementById('planPrice').innerHTML='₹49 <span>for 2 months</span>'
+            +'<br><span style="font-size:12px;color:#059669;font-weight:500">🎁 1+1 — pay 1 month, get 2</span>'
+            +'<br><span style="font-size:11px;color:rgba(0,0,0,0.35);font-weight:400">Then ₹49/month from '+nextChargeDate+'</span>';
         document.getElementById('planBadge').textContent='1+1 OFFER';
-        btn.textContent='Start 1+1 Offer';
+        btn.textContent='Pay ₹49 — get 2 months';
     }
 
     // Hide coupon section for annual plans
@@ -204,13 +213,13 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
                 // Coupon valid — update subscription_id to the new trial one
                 if(data.new_subscription_id) sid=data.new_subscription_id;
                 isTrial=true;
-                couponMsg.innerHTML='<strong style="color:#059669">'+code+'</strong> — '+(data.description||'2 months free!');
+                couponMsg.innerHTML='<strong style="color:#059669">'+code+'</strong> — '+(data.description||'1 month free!');
                 couponMsg.style.color='#059669';
                 couponInput.disabled=true;
                 couponBtn.disabled=true;
                 couponBtn.textContent='Applied';
-                // Update price display
-                document.getElementById('planPrice').innerHTML='₹0 <span>/month</span><br><span style="font-size:12px;color:#059669;font-weight:500">Free for 2 months, then ₹49/mo</span>';
+                // Update price display — coupons give 1 free month, then ₹49/mo
+                document.getElementById('planPrice').innerHTML='₹0 <span>/month</span><br><span style="font-size:12px;color:#059669;font-weight:500">Free for 1 month, then ₹49/mo</span>';
                 document.getElementById('planBadge').textContent='FREE TRIAL';
                 btn.textContent='Start Free Trial';
             } else {
@@ -233,7 +242,7 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
         document.getElementById('statusMsg').textContent='';
         var rzpOpts={
             key:kid,subscription_id:sid,name:'Jusay',
-            description:isTrial?'Pro Monthly — 2 Month Free Trial':d.name+' Subscription'+(firstMonthFree?' — first month free':''),
+            description:isTrial?'Pro Monthly — 1 Month Free Trial':d.name+' Subscription'+(bonusMonth?' — 1+1, pay 1 month get 2':''),
             image:'https://jusaywebsite.vercel.app/jusay-logo.png',
             prefill:{name:name,email:email},
             theme:{color:'#2e2d2d'},
@@ -249,7 +258,7 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
                 }).then(function(r){return r.json()}).then(function(data){
                     if(data.success){
                         btn.textContent=isTrial?'Free Trial Active!':'You are now Pro!';
-                        document.getElementById('statusMsg').textContent=isTrial?'2 months free! You can cancel anytime from Jusay settings.':'Welcome to Jusay Pro! You can close this page.';
+                        document.getElementById('statusMsg').textContent=isTrial?'1 month free! You can cancel anytime from Jusay settings.':(bonusMonth?'2 months of Pro are active. Next ₹49 on '+nextChargeDate+'.':'Welcome to Jusay Pro! You can close this page.');
                     } else {
                         btn.textContent=isTrial?'Trial Activated':'Payment Successful';
                         document.getElementById('statusMsg').textContent='Pro will activate shortly. You can close this page.';
@@ -261,7 +270,7 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
             },
             modal:{ondismiss:function(){
                 btn.disabled=false;
-                btn.textContent=isTrial?'Start Free Trial':'Pay '+d.total;
+                btn.textContent=isTrial?'Start Free Trial':(bonusMonth?'Pay ₹49 — get 2 months':'Pay '+d.total);
                 document.getElementById('statusMsg').textContent=isTrial?'Autopay setup cancelled.':'Payment cancelled.';
                 document.getElementById('statusMsg').className='status err';
             }}

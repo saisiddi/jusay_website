@@ -7,7 +7,11 @@ export type PlanType = "pro_monthly" | "pro_annual";
 /** Response contract of the `create-subscription` edge function. */
 interface CreateSubscriptionResponse {
   success: boolean;
-  firstMonthFree?: boolean;
+  /**
+   * True when this is a first-time Pro user, who gets the 1+1 offer: ₹49 charged
+   * today covers 60 days of Pro, next ₹49 on day 61.
+   */
+  bonusMonth?: boolean;
   subscriptionId?: string;
   keyId?: string;
   error?: string;
@@ -28,7 +32,8 @@ export interface CheckoutParams {
   email: string;
   name: string;
   plan: PlanType;
-  firstMonthFree?: boolean;
+  /** Show the 1+1 offer copy on the checkout page (pay ₹49 now, get 2 months). */
+  bonusMonth?: boolean;
 }
 
 /**
@@ -44,7 +49,7 @@ export const buildCheckoutUrl = (origin: string, params: CheckoutParams): string
     name: params.name,
     plan: params.plan,
   });
-  if (params.firstMonthFree) query.set("firstMonthFree", "1");
+  if (params.bonusMonth) query.set("bonusMonth", "1");
   return `${origin.replace(/\/$/, "")}/checkout/?${query.toString()}`;
 };
 
@@ -147,7 +152,7 @@ export const startProCheckout = async (
       email,
       name: displayNameFor(email, options.fullName),
       plan,
-      firstMonthFree: Boolean(data.firstMonthFree),
+      bonusMonth: Boolean(data.bonusMonth),
     });
 
     toast.success("Redirecting to secure checkout…", { id: toastId });
