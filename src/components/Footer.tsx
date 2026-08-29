@@ -100,7 +100,7 @@ const Footer = () => {
           {/* Brand column */}
           <div style={{ gridColumn: "span 2" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-              <img src="/jusay-mark.svg" alt="Jusay" style={{ height: 28, width: 28 }} />
+              <img src="/jusay-mark.png" alt="Jusay" style={{ height: 28, width: 28 }} />
               <span style={{ fontSize: 22, letterSpacing: "-0.01em" }}>
                 {"jusay.".split("").map((char, i) => (
                   <GlowLetter key={i} char={char} />

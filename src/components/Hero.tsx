@@ -329,7 +329,7 @@ const Hero = () => {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 18px", borderBottom: "1px solid rgba(124,58,237,0.08)" }}>
               <span style={{ width: 64 }} />
               <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                <img src="/jusay-mark.svg" alt="" style={{ width: 18, height: 18 }} draggable={false} />
+                <img src="/jusay-mark.png" alt="" style={{ width: 18, height: 18 }} draggable={false} />
                 <span style={{ fontSize: 13, lineHeight: 1 }}>
                   <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 800, color: "#2e2d2d" }}>ju</span>
                   <span style={{ fontFamily: "'Times New Roman', Times, serif", fontStyle: "italic", fontWeight: 700, color: "#2e2d2d" }}>say.</span>
