@@ -55,7 +55,7 @@ const Showcase = () => {
           transition={{ delay: 0.2 }}
           className="text-center text-[#2e2d2d]/50 text-lg md:text-xl max-w-2xl mx-auto mb-20 leading-relaxed"
         >
-          Stop crafting every sentence by hand. Speak naturally and jus声 delivers polished, context-aware output instantly - no switching, no rewriting, no friction.
+          Stop crafting every sentence by hand. Speak naturally and jusay delivers polished, context-aware output instantly - no switching, no rewriting, no friction.
         </motion.p>
 
         {/* Stats row */}
@@ -95,7 +95,7 @@ const Showcase = () => {
           >
             <img
               src={appDashboard}
-              alt="jus声 dashboard interface"
+              alt="jusay dashboard interface"
               className="w-full rounded-2xl"
             />
             <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-[rgba(124,58,237,0.08)]" />

@@ -139,7 +139,7 @@ const Overlay: React.FC = () => {
 
                 {/* Complete: brand text */}
                 {state === 'complete' && (
-                    <span className="brand-label">juskoe</span>
+                    <span className="brand-label">jusay</span>
                 )}
             </div>
         </div>

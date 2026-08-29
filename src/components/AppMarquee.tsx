@@ -87,7 +87,7 @@ const AppMarquee = () => {
           One voice, every app
         </h2>
         <p className="text-[#2e2d2d]/50 mt-3 text-lg">
-          jus声 works system-wide — any text field in any application.
+          jusay works system-wide — any text field in any application.
         </p>
       </motion.div>
 

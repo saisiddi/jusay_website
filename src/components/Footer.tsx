@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logo from "@/assets/juskoe-logo.png";
 import { Twitter, Mail } from "lucide-react";
 
 const footerLinks = {
@@ -28,13 +27,13 @@ const footerLinks = {
 
 const socialLinks = [
   { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Mail, href: "mailto:support@juskoe.in", label: "Email" },
+  { icon: Mail, href: "mailto:support@jusay.in", label: "Email" },
 ];
 
 /* Letter-by-letter hover glow — NO shine animation */
 const GlowLetter = ({ char }: { char: string }) => {
   const [hovered, setHovered] = useState(false);
-  const isKoe = "koe.".includes(char);
+  const isSay = "say.".includes(char);
 
   return (
     <motion.span
@@ -48,11 +47,11 @@ const GlowLetter = ({ char }: { char: string }) => {
       }}
       transition={{ duration: 0.25 }}
       style={{
-        fontFamily: isKoe
+        fontFamily: isSay
           ? "'Times New Roman', Times, Georgia, serif"
           : "Inter, sans-serif",
-        fontStyle: isKoe ? "italic" : "normal",
-        fontWeight: isKoe ? 700 : 800,
+        fontStyle: isSay ? "italic" : "normal",
+        fontWeight: isSay ? 700 : 800,
         cursor: "default",
         display: "inline-block",
       }}
@@ -101,9 +100,9 @@ const Footer = () => {
           {/* Brand column */}
           <div style={{ gridColumn: "span 2" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-              <img src={logo} alt="Juskoe" style={{ height: 28, width: 28 }} />
+              <img src="/jusay-mark.svg" alt="Jusay" style={{ height: 28, width: 28 }} />
               <span style={{ fontSize: 22, letterSpacing: "-0.01em" }}>
-                {"juskoe.".split("").map((char, i) => (
+                {"jusay.".split("").map((char, i) => (
                   <GlowLetter key={i} char={char} />
                 ))}
               </span>
@@ -214,7 +213,7 @@ const Footer = () => {
           }}
         >
           <p style={{ fontSize: 12, color: "rgba(46,45,45,0.35)", margin: 0 }}>
-            © {new Date().getFullYear()} Juskoe. All rights reserved.
+            © {new Date().getFullYear()} Jusay. All rights reserved.
           </p>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             {socialLinks.map((social) => (

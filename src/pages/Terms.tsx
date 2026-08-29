@@ -6,13 +6,13 @@ const Terms = () => {
   const sections = [
     {
       title: "1. Acceptance of Terms",
-      content: `By downloading, installing, or using Juskoe ("the Software"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Software.
+      content: `By downloading, installing, or using Jusay ("the Software"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Software.
 
-These Terms constitute a legally binding agreement between you and Juskoe ("Company", "we", "us") regarding your use of the Juskoe application.`,
+These Terms constitute a legally binding agreement between you and Jusay ("Company", "we", "us") regarding your use of the Jusay application.`,
     },
     {
       title: "2. Description of Service",
-      content: `Juskoe is a desktop voice-to-text application that:
+      content: `Jusay is a desktop voice-to-text application that:
 
 • Converts speech to text with AI-powered accuracy
 • Provides intelligent text formatting and context-aware output
@@ -37,7 +37,7 @@ Pro subscriptions are billed monthly. You may cancel your subscription at any ti
     },
     {
       title: "4. User Conduct",
-      content: `You agree NOT to use Juskoe to:
+      content: `You agree NOT to use Jusay to:
 
 • Generate harmful, abusive, or illegal content
 • Attempt to reverse-engineer, decompile, or modify the Software
@@ -49,13 +49,13 @@ We reserve the right to terminate accounts that violate these terms.`,
     },
     {
       title: "5. Intellectual Property",
-      content: `The Juskoe application, including its design, code, branding, and documentation, is the intellectual property of Juskoe. All rights are reserved.
+      content: `The Jusay application, including its design, code, branding, and documentation, is the intellectual property of Jusay. All rights are reserved.
 
 You are granted a non-exclusive, non-transferable license to use the Software for personal or commercial productivity purposes. This license does not transfer any ownership rights.`,
     },
     {
       title: "6. Privacy & Data",
-      content: `Your use of Juskoe is also governed by our Privacy Policy. Key points:
+      content: `Your use of Jusay is also governed by our Privacy Policy. Key points:
 
 • Voice data is processed securely and not permanently stored
 • Account and sync data is stored with enterprise-grade encryption
@@ -72,11 +72,11 @@ For full details, please review our Privacy Policy.`,
 • Accuracy of AI-generated content
 • Compatibility with all applications or operating systems
 
-You are solely responsible for reviewing AI-generated output before use. Juskoe is a productivity tool - not a replacement for professional editing, legal, or medical advice.`,
+You are solely responsible for reviewing AI-generated output before use. Jusay is a productivity tool - not a replacement for professional editing, legal, or medical advice.`,
     },
     {
       title: "8. Limitation of Liability",
-      content: `TO THE MAXIMUM EXTENT PERMITTED BY LAW, Juskoe SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING FROM YOUR USE OF THE SOFTWARE.
+      content: `TO THE MAXIMUM EXTENT PERMITTED BY LAW, Jusay SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING FROM YOUR USE OF THE SOFTWARE.
 
 Our total liability shall not exceed the amount you paid for the Software in the 12 months preceding the claim.`,
     },
@@ -92,9 +92,9 @@ Our total liability shall not exceed the amount you paid for the Software in the
       title: "11. Contact",
       content: `For questions about these Terms, contact us:
 
-• Email: support@juskoe.in
+• Email: support@jusay.in
 • Phone: +91 8608208309
-• Company: Juskoe`,
+• Company: Jusay`,
     },
   ];
 
@@ -146,7 +146,7 @@ Our total liability shall not exceed the amount you paid for the Software in the
             marginBottom: 40,
           }}
         >
-          Please read these Terms of Service carefully before using the Juskoe application.
+          Please read these Terms of Service carefully before using the Jusay application.
         </p>
 
         {sections.map((section, i) => (

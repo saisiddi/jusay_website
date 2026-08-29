@@ -20,7 +20,7 @@ const steps = [
   {
     step: 2,
     title: "Press F7",
-    desc: "With text selected, press F7. Juskoe detects the selection and enters Rewrite mode — ready for your instructions.",
+    desc: "With text selected, press F7. Jusay detects the selection and enters Rewrite mode — ready for your instructions.",
   },
   {
     step: 3,
@@ -35,7 +35,7 @@ const steps = [
 ];
 
 const useCases = [
-  { icon: Edit3, title: "Change tone & style", desc: "Make text professional, casual, formal, or friendly. Just select and tell Juskoe the tone you want." },
+  { icon: Edit3, title: "Change tone & style", desc: "Make text professional, casual, formal, or friendly. Just select and tell Jusay the tone you want." },
   { icon: Languages, title: "Translate instantly", desc: "Select text in any language, press F7, and say 'translate to French' or any of 99 supported languages." },
   { icon: FileEdit, title: "Summarize & expand", desc: "Condense long paragraphs into key points or expand brief notes into full documents — all by voice." },
 ];
@@ -56,7 +56,7 @@ const RewriteMode = () => (
         </motion.h1>
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
           style={{ fontSize: 18, color: "rgba(46,45,45,0.6)", marginTop: 20, lineHeight: 1.7, maxWidth: 600, margin: "20px auto 0" }}>
-          Highlight any text, press <strong style={{ color: "#3B82F6" }}>Select + F7</strong>, and tell Juskoe how to transform it — rewrite, summarize, translate, or change the tone.
+          Highlight any text, press <strong style={{ color: "#3B82F6" }}>Select + F7</strong>, and tell Jusay how to transform it — rewrite, summarize, translate, or change the tone.
         </motion.p>
       </div>
     </section>

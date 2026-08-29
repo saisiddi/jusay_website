@@ -15,7 +15,7 @@ const steps = [
   {
     step: 1,
     title: "Press F8 anywhere",
-    desc: "Open any text field and press F8. The overlay appears — Juskoe is ready to clean up your speech.",
+    desc: "Open any text field and press F8. The overlay appears — Jusay is ready to clean up your speech.",
   },
   {
     step: 2,
@@ -25,7 +25,7 @@ const steps = [
   {
     step: 3,
     title: "AI fixes grammar & fillers",
-    desc: "Juskoe's Grammar Mode strips out filler words ('umm', 'uhh', 'like'), fixes spelling, corrects punctuation, and adds proper capitalization.",
+    desc: "Jusay's Grammar Mode strips out filler words ('umm', 'uhh', 'like'), fixes spelling, corrects punctuation, and adds proper capitalization.",
   },
   {
     step: 4,
@@ -56,7 +56,7 @@ const GrammarMode = () => (
         </motion.h1>
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
           style={{ fontSize: 18, color: "rgba(46,45,45,0.6)", marginTop: 20, lineHeight: 1.7, maxWidth: 600, margin: "20px auto 0" }}>
-          Press <strong style={{ color: "#059669" }}>F8</strong>, speak naturally with all your filler words, and Juskoe instantly corrects spelling, grammar, and punctuation.
+          Press <strong style={{ color: "#059669" }}>F8</strong>, speak naturally with all your filler words, and Jusay instantly corrects spelling, grammar, and punctuation.
         </motion.p>
       </div>
     </section>
@@ -102,7 +102,7 @@ const GrammarMode = () => (
               <ArrowRight style={{ width: 20, height: 20, color: "#059669" }} />
             </div>
             <div style={{ padding: 16, borderRadius: 12, background: "#f0fdf4", border: "1px solid #bbf7d0" }}>
-              <p style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", color: "#16a34a", marginBottom: 6 }}>Juskoe pastes</p>
+              <p style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", color: "#16a34a", marginBottom: 6 }}>Jusay pastes</p>
               <p style={{ fontSize: 16, color: "#166534" }}>"Hey, how are you? I wanted to ask about the meeting tomorrow at 3 PM."</p>
             </div>
           </div>

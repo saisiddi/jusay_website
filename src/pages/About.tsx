@@ -27,7 +27,7 @@ const values = [
   {
     icon: Heart,
     title: "Built With Passion",
-    desc: "Juskoe was built by two developers who were tired of typing. Every feature exists because it was needed.",
+    desc: "Jusay was built by two developers who were tired of typing. Every feature exists because it was needed.",
   },
 ];
 
@@ -35,30 +35,30 @@ const founders = [
   {
     name: "Aishwanth M S",
     role: "CEO & Founder",
-    email: "aishwanth@juskoe.in",
+    email: "aishwanth@jusay.in",
     linkedin: "https://www.linkedin.com/in/aishwanth/",
-    bio: "Aishwanth is a full-stack developer and AI entrepreneur who architected Juskoe from the ground up. As CEO, he leads product vision, engineering strategy, and the mission to make voice the universal input layer for every desktop application. He built Juskoe to solve his own productivity frustrations - and it's now relied upon by thousands of users worldwide.",
+    bio: "Aishwanth is a full-stack developer and AI entrepreneur who architected Jusay from the ground up. As CEO, he leads product vision, engineering strategy, and the mission to make voice the universal input layer for every desktop application. He built Jusay to solve his own productivity frustrations - and it's now relied upon by thousands of users worldwide.",
   },
   {
     name: "Vishwajeeth Rao B",
     role: "Co-Founder",
-    email: "vishwajeeth@juskoe.in",
+    email: "vishwajeeth@jusay.in",
     linkedin: "https://www.linkedin.com/in/vishwajeeth-rao-b-7a1764381/",
-    bio: "Vishwajeeth brings strategic product thinking and operational excellence to Juskoe. As Co-Founder, he drives user growth, partnerships, and the overall product roadmap - ensuring every feature we ship genuinely improves how people work and communicate with voice AI technology.",
+    bio: "Vishwajeeth brings strategic product thinking and operational excellence to Jusay. As Co-Founder, he drives user growth, partnerships, and the overall product roadmap - ensuring every feature we ship genuinely improves how people work and communicate with voice AI technology.",
   },
   {
     name: "Govind D S",
     role: "Co-Founder & CTO",
-    email: "govind@juskoe.in",
+    email: "govind@jusay.in",
     linkedin: "https://www.linkedin.com/in/govind-ds-162801355/",
-    bio: "Govind leads the technical architecture and engineering teams at Juskoe. As Co-Founder & CTO, he oversees the AI/ML pipeline, speech-to-text inference, system-level integrations, and cloud infrastructure - ensuring Juskoe delivers blazing-fast, accurate voice recognition across Windows and macOS with enterprise-grade reliability.",
+    bio: "Govind leads the technical architecture and engineering teams at Jusay. As Co-Founder & CTO, he oversees the AI/ML pipeline, speech-to-text inference, system-level integrations, and cloud infrastructure - ensuring Jusay delivers blazing-fast, accurate voice recognition across Windows and macOS with enterprise-grade reliability.",
   },
 ];
 
 const About = () => {
   useEffect(() => {
-    document.title = "About Juskoe - Meet the Founders | AI Voice Assistant";
-    return () => { document.title = "Juskoe"; };
+    document.title = "About Jusay - Meet the Founders | AI Voice Assistant";
+    return () => { document.title = "Jusay"; };
   }, []);
 
   return (
@@ -111,7 +111,7 @@ const About = () => {
               marginRight: "auto",
             }}
           >
-            Juskoe is a universal AI-powered voice assistant that works system-wide on Windows and macOS.
+            Jusay is a universal AI-powered voice assistant that works system-wide on Windows and macOS.
           </motion.p>
         </div>
       </section>
@@ -137,18 +137,18 @@ const About = () => {
             }}
           >
             <p>
-              Juskoe was born out of frustration. As developers and content creators, we spend
+              Jusay was born out of frustration. As developers and content creators, we spend
               hours typing every day - emails, code comments, messages, documents. We thought:
               <em> why are we still typing when we can speak 3x faster?</em>
             </p>
             <p>
               Existing voice-to-text tools were either too expensive ($15+/month), didn't work
-              system-wide, or lacked the intelligence to format text properly. So we built Juskoe —
+              system-wide, or lacked the intelligence to format text properly. So we built Jusay —
               a universal voice layer that works in <strong>any</strong> app, understands context,
               and intelligently formats your text based on what you're doing.
             </p>
             <p>
-              Today, Juskoe supports a wide range of languages, three distinct modes (AI, Grammar, Notes),
+              Today, Jusay supports a wide range of languages, three distinct modes (AI, Grammar, Notes),
               custom dictionaries, text snippets, writing styles, and cloud sync - all in a
               lightweight desktop app that sits quietly in your system tray until you need it.
             </p>

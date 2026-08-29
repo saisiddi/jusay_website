@@ -43,7 +43,7 @@ const UseCases = () => {
             viewport={{ once: true }}
             className="text-white/40 text-lg max-w-xl mx-auto"
           >
-            If you write messages, emails, notes, or prompts every day - juskoe removes the friction completely.
+            If you write messages, emails, notes, or prompts every day - jusay removes the friction completely.
           </motion.p>
         </div>
 

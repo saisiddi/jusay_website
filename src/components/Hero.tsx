@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from "react";
 // Windows & Apple brand SVGs used inline below
 import BlurText from "./BlurText";
 import ShinyText from "./ShinyText";
-import appHero from "@/assets/app-hero.png";
+import { Flame, Keyboard, Timer, Minus, Square, X } from "lucide-react";
 
 // Scrolling words that cycle through
 const aiWords = ["leave application", "cold email", "meeting summary", "product brief", "LinkedIn post"];
@@ -138,7 +138,7 @@ const OverlayPillDemo = () => {
                     letterSpacing: "0.01em",
                   }}
                 >
-                  juskoe
+                  jusay
                 </motion.span>
               </AnimatePresence>
             )}
@@ -226,7 +226,7 @@ const Hero = () => {
         >
           <div className="badge-purple">
             <span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED] animate-pulse" />
-            juskoe — Press a key. Speak. Done.
+            system-wide voice layer
           </div>
         </motion.div>
 
@@ -237,10 +237,10 @@ const Hero = () => {
           transition={{ duration: 0.7, delay: 0.2 }}
         >
           <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-tight leading-[1.05] mb-2 text-[#2e2d2d]">
-            Just <span className="font-serif-italic italic-shine"><ShinyText text="voice," speed={4} color="#2e2d2d" shineColor="#7C3AED" /></span>
+            don't <span className="font-serif-italic italic-shine"><ShinyText text="whisper," speed={4} color="#2e2d2d" shineColor="#7C3AED" /></span>
           </h1>
           <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-tight leading-[1.05] mb-8 text-[#2e2d2d]">
-            Nothing else.
+            jusay!!
           </h1>
         </motion.div>
 
@@ -260,7 +260,7 @@ const Hero = () => {
           transition={{ duration: 0.7, delay: 0.45 }}
         >
           <BlurText
-            text="juskoe is a system-wide voice layer. Press a hotkey, speak naturally, and get polished text pasted anywhere instantly."
+            text="jusay is a system-wide voice layer. Press a hotkey, speak naturally, and get polished text pasted anywhere instantly."
             delay={60}
             className="text-lg md:text-xl text-[#2e2d2d]/60 max-w-2xl mx-auto mb-10 leading-relaxed justify-center"
             direction="bottom"
@@ -320,13 +320,67 @@ const Hero = () => {
             maxHeight: "55vh",
           }}
         >
-          <img
-            src={appHero}
-            alt="juskoe app interface"
+          <div
             className="w-full rounded-t-2xl"
-            style={{ display: "block", minHeight: 200, transform: "scale(1.02)", transformOrigin: "top center", userSelect: "none", WebkitUserSelect: "none", WebkitUserDrag: "none" }}
+            style={{ background: "linear-gradient(180deg, #fbfaff 0%, #f4f0fd 100%)", minHeight: 200, userSelect: "none", transform: "scale(1.02)", transformOrigin: "top center" }}
             draggable={false}
-          />
+          >
+            {/* Window chrome */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 18px", borderBottom: "1px solid rgba(124,58,237,0.08)" }}>
+              <span style={{ width: 64 }} />
+              <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                <img src="/jusay-mark.svg" alt="" style={{ width: 18, height: 18 }} draggable={false} />
+                <span style={{ fontSize: 13, lineHeight: 1 }}>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 800, color: "#2e2d2d" }}>ju</span>
+                  <span style={{ fontFamily: "'Times New Roman', Times, serif", fontStyle: "italic", fontWeight: 700, color: "#2e2d2d" }}>say.</span>
+                </span>
+              </span>
+              <span style={{ display: "flex", alignItems: "center", gap: 12, color: "rgba(46,45,45,0.35)" }}>
+                <Minus size={11} /><Square size={9} /><X size={11} />
+              </span>
+            </div>
+
+            {/* Greeting + streak stats */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 26px 0", gap: 12 }}>
+              <span style={{ fontSize: 19, fontWeight: 700, color: "#1f1e1e", letterSpacing: "-0.01em" }}>Ready for a great day, Aishwanth?</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 11, color: "rgba(46,45,45,0.45)", fontWeight: 600, whiteSpace: "nowrap" }}>
+                <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Flame size={11} /> 0 days</span>
+                <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Keyboard size={11} /> 0 words</span>
+                <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Timer size={11} /> 0 WPM</span>
+              </span>
+            </div>
+
+            {/* Mode counters */}
+            <div style={{ display: "flex", gap: 8, padding: "12px 26px 0" }}>
+              <span style={{ background: "#2e2d2d", color: "#fff", fontSize: 10.5, fontWeight: 700, padding: "5px 10px", borderRadius: 6, letterSpacing: "0.04em" }}>
+                AI 0 <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 500 }}>/10</span>
+              </span>
+              <span style={{ background: "#2e2d2d", color: "#fff", fontSize: 10.5, fontWeight: 700, padding: "5px 10px", borderRadius: 6, letterSpacing: "0.04em" }}>
+                GRAMMAR 0 <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 500 }}>/15</span>
+              </span>
+            </div>
+
+            {/* Dark hint banner */}
+            <div style={{ margin: "14px 26px 0", background: "#262525", borderRadius: 12, padding: "18px 20px", position: "relative", color: "#fff" }}>
+              <span style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.35)" }}><X size={13} /></span>
+              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.01em" }}>
+                Press <span style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.22)", borderRadius: 4, padding: "1px 6px", fontSize: 11.5, fontWeight: 700 }}>F7</span> - AI or <span style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.22)", borderRadius: 4, padding: "1px 6px", fontSize: 11.5, fontWeight: 700 }}>F8</span> - Grammar to dictate in any app
+              </div>
+              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", marginTop: 8, lineHeight: 1.6, maxWidth: 560 }}>
+                jusay works in all your apps. Try it in <strong style={{ color: "rgba(255,255,255,0.8)" }}>email</strong>, <strong style={{ color: "rgba(255,255,255,0.8)" }}>messages</strong>, <strong style={{ color: "rgba(255,255,255,0.8)" }}>docs</strong> or anywhere else.
+                Press F7 for AI mode, F8 for grammar mode.
+              </p>
+              <span style={{ display: "inline-block", marginTop: 14, background: "#fff", color: "#262525", fontSize: 12, fontWeight: 600, padding: "7px 14px", borderRadius: 8 }}>
+                See how it works
+              </span>
+            </div>
+
+            {/* Empty state */}
+            <div style={{ padding: "18px 26px 26px" }}>
+              <div style={{ fontSize: 10, letterSpacing: "0.08em", color: "rgba(46,45,45,0.35)", fontWeight: 600 }}>FEBRUARY 18, 2026</div>
+              <div style={{ fontSize: 12, color: "rgba(46,45,45,0.4)", marginTop: 10 }}>No commands yet. Press F7 or F8 to start.</div>
+            </div>
+          </div>
           {/* Fade-out gradient at bottom — matches section bg */}
           <div
             style={{

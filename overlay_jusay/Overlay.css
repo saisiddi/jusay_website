@@ -1,5 +1,5 @@
-/* Overlay Styles - Juskoe */
-/* States: low-idle (small bar), listening (AI/G + eq), processing (eq), complete (juskoe text) */
+/* Overlay Styles - Jusay */
+/* States: low-idle (small bar), listening (AI/G + eq), processing (eq), complete (jusay text) */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap');
 
 * {
@@ -101,7 +101,7 @@ body {
 }
 
 /* ============================================
-   BRAND LABEL - juskoe (with animation)
+   BRAND LABEL - jusay (with animation)
    ============================================ */
 .brand-label {
     font-size: 13px;

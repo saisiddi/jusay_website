@@ -15,7 +15,7 @@ const steps = [
   {
     step: 1,
     title: "Press F7 anywhere",
-    desc: "Open any app — email, chat, doc, code editor. Press F7 to activate AI Mode. The Juskoe overlay appears, showing it's listening.",
+    desc: "Open any app — email, chat, doc, code editor. Press F7 to activate AI Mode. The Jusay overlay appears, showing it's listening.",
   },
   {
     step: 2,
@@ -25,7 +25,7 @@ const steps = [
   {
     step: 3,
     title: "AI processes your request",
-    desc: "Juskoe transcribes your speech locally (audio never leaves your device) and sends the text to our AI engine for smart formatting and generation.",
+    desc: "Jusay transcribes your speech locally (audio never leaves your device) and sends the text to our AI engine for smart formatting and generation.",
   },
   {
     step: 4,
@@ -56,7 +56,7 @@ const AIMode = () => (
         </motion.h1>
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
           style={{ fontSize: 18, color: "rgba(46,45,45,0.6)", marginTop: 20, lineHeight: 1.7, maxWidth: 600, margin: "20px auto 0" }}>
-          Juskoe's most powerful mode. Press <strong style={{ color: "#7C3AED" }}>F7</strong>, speak what you need, and get intelligently formatted text pasted at your cursor.
+          Jusay's most powerful mode. Press <strong style={{ color: "#7C3AED" }}>F7</strong>, speak what you need, and get intelligently formatted text pasted at your cursor.
         </motion.p>
       </div>
     </section>

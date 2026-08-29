@@ -8,8 +8,8 @@ const contactInfo = [
   {
     icon: Mail,
     label: "Email",
-    value: "support@juskoe.in",
-    href: "mailto:support@juskoe.in",
+    value: "support@jusay.in",
+    href: "mailto:support@jusay.in",
   },
   {
     icon: Phone,
@@ -36,8 +36,8 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const mailto = `mailto:support@juskoe.in?subject=${encodeURIComponent(
-      formData.subject || "Juskoe Inquiry"
+    const mailto = `mailto:support@jusay.in?subject=${encodeURIComponent(
+      formData.subject || "Jusay Inquiry"
     )}&body=${encodeURIComponent(
       `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
     )}`;
@@ -190,7 +190,7 @@ const Contact = () => {
                 {[
                   { icon: Twitter, href: "#", label: "Twitter" },
                   { icon: Linkedin, href: "https://www.linkedin.com/in/aishwanth/", label: "LinkedIn" },
-                  { icon: Mail, href: "mailto:support@juskoe.in", label: "Email" },
+                  { icon: Mail, href: "mailto:support@jusay.in", label: "Email" },
                 ].map((s) => (
                   <a
                     key={s.label}
@@ -224,7 +224,7 @@ const Contact = () => {
                 border: "1px solid rgba(124,58,237,0.1)",
               }}
             >
-              <p style={{ fontSize: 14, fontWeight: 700, marginBottom: 4, color: "#2e2d2d" }}>Juskoe</p>
+              <p style={{ fontSize: 14, fontWeight: 700, marginBottom: 4, color: "#2e2d2d" }}>Jusay</p>
               <p style={{ fontSize: 13, color: "#888", lineHeight: 1.6, margin: 0 }}>
                 AI-powered voice-to-text for every app
               </p>

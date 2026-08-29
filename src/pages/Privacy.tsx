@@ -6,7 +6,7 @@ const Privacy = () => {
   const sections = [
     {
       title: "1. Information We Collect",
-      content: `When you use Juskoe, we collect minimal information necessary to provide our service:
+      content: `When you use Jusay, we collect minimal information necessary to provide our service:
 
 • Account Information - If you create an account, we collect your email address and display name for authentication purposes.
 
@@ -22,7 +22,7 @@ const Privacy = () => {
       title: "2. How We Use Your Information",
       content: `We use the collected information to:
 
-• Provide and maintain the Juskoe application
+• Provide and maintain the Jusay application
 • Process your voice input into formatted text
 • Apply AI formatting and grammar corrections
 • Sync your data across devices (Pro users)
@@ -32,7 +32,7 @@ const Privacy = () => {
     },
     {
       title: "3. Privacy & Security",
-      content: `Juskoe is designed with privacy as a core principle:
+      content: `Jusay is designed with privacy as a core principle:
 
 • Voice processing is handled securely with industry-standard practices.
 • Audio files are temporary and deleted immediately after processing.
@@ -41,7 +41,7 @@ const Privacy = () => {
     },
     {
       title: "4. Third-Party Services",
-      content: `Juskoe integrates with trusted third-party services for specific functionality:
+      content: `Jusay integrates with trusted third-party services for specific functionality:
 
 • AI Services - Text processing is handled by enterprise-grade AI providers with strict privacy policies.
 • Authentication - Secure sign-in via industry-standard OAuth providers.
@@ -66,11 +66,11 @@ All third-party partners are vetted for security compliance.`,
 • Opt out of cloud sync and keep all data local
 • Withdraw consent for data processing at any time
 
-To exercise these rights, contact us at support@juskoe.in.`,
+To exercise these rights, contact us at support@jusay.in.`,
     },
     {
       title: "7. Children's Privacy",
-      content: `Juskoe is not intended for children under 13. We do not knowingly collect personal information from children. If you believe we have collected data from a child under 13, please contact us immediately.`,
+      content: `Jusay is not intended for children under 13. We do not knowingly collect personal information from children. If you believe we have collected data from a child under 13, please contact us immediately.`,
     },
     {
       title: "8. Changes to This Policy",
@@ -80,9 +80,9 @@ To exercise these rights, contact us at support@juskoe.in.`,
       title: "9. Contact Us",
       content: `If you have questions about this privacy policy, please contact us:
 
-• Email: support@juskoe.in
+• Email: support@jusay.in
 • Phone: +91 8608208309
-• Company: Juskoe`,
+• Company: Jusay`,
     },
   ];
 
@@ -134,8 +134,8 @@ To exercise these rights, contact us at support@juskoe.in.`,
             marginBottom: 40,
           }}
         >
-          At Juskoe ("we", "our", "us"), your privacy is important to us. This Privacy Policy
-          explains how we collect, use, and protect your information when you use the Juskoe
+          At Jusay ("we", "our", "us"), your privacy is important to us. This Privacy Policy
+          explains how we collect, use, and protect your information when you use the Jusay
           desktop application and related services.
         </p>
 

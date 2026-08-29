@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Juskoe</title>
-<link rel="icon" type="image/png" href="/juskoe-logo.png">
-<link rel="shortcut icon" type="image/png" href="/juskoe-logo.png">
+<title>Jusay</title>
+<link rel="icon" type="image/svg+xml" href="/jusay-mark.svg">
+<link rel="shortcut icon" type="image/svg+xml" href="/jusay-mark.svg">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -105,8 +105,8 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
 <div class="checkout">
     <div class="summary">
         <div class="brand">
-            <img class="brand-logo" src="/juskoe-logo.png" alt="Juskoe" onerror="this.style.display='none'">
-            <span class="brand-name">Juskoe</span>
+            <img class="brand-logo" src="/jusay-mark.svg" alt="Jusay" onerror="this.style.display='none'">
+            <span class="brand-name">Jusay</span>
         </div>
         <div class="section-label">Your Plan</div>
         <div class="plan-card">
@@ -140,7 +140,7 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
             <button class="coupon-btn" id="couponBtn" type="button">Apply</button>
         </div>
         <div class="coupon-msg" id="couponMsg"></div>
-        <div class="note">Cancel anytime from Juskoe app settings. No questions asked.</div>
+        <div class="note">Cancel anytime from Jusay app settings. No questions asked.</div>
         <div class="powered">Payments by Razorpay</div>
     </div>
 </div>
@@ -164,7 +164,7 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
 
     if(!sid||!kid){
         btn.textContent='Invalid Link';
-        document.getElementById('statusMsg').textContent='Missing payment details. Try again from Juskoe.';
+        document.getElementById('statusMsg').textContent='Missing payment details. Try again from Jusay.';
         document.getElementById('statusMsg').className='status err';
         return;
     }
@@ -224,7 +224,7 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
         btn.innerHTML='<span class="spinner"></span>'+(isTrial?'Setting up...':'Processing...');
         document.getElementById('statusMsg').textContent='';
         var rzpOpts={
-            key:kid,subscription_id:sid,name:'Juskoe',
+            key:kid,subscription_id:sid,name:'Jusay',
             description:isTrial?'Pro Monthly — 2 Month Free Trial':d.name+' Subscription',
             image:'https://juskoe.in/juskoe-logo.png',
             prefill:{name:name,email:email},
@@ -241,7 +241,7 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
                 }).then(function(r){return r.json()}).then(function(data){
                     if(data.success){
                         btn.textContent=isTrial?'Free Trial Active!':'You are now Pro!';
-                        document.getElementById('statusMsg').textContent=isTrial?'2 months free! You can cancel anytime from Juskoe settings.':'Welcome to Juskoe Pro! You can close this page.';
+                        document.getElementById('statusMsg').textContent=isTrial?'2 months free! You can cancel anytime from Jusay settings.':'Welcome to Jusay Pro! You can close this page.';
                     } else {
                         btn.textContent=isTrial?'Trial Activated':'Payment Successful';
                         document.getElementById('statusMsg').textContent='Pro will activate shortly. You can close this page.';

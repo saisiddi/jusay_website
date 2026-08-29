@@ -14,7 +14,7 @@ const modes = [
     icon: Sparkles,
     title: "AI Mode",
     tagline: "Speak → get polished output",
-    description: "Say your intent. juskoe generates clean text and pastes it at your cursor.",
+    description: "Say your intent. jusay generates clean text and pastes it at your cursor.",
     side: "left",
   },
   {
@@ -26,7 +26,7 @@ const modes = [
     icon: Mic,
     title: "Grammar Mode",
     tagline: "Speak raw → paste polished",
-    description: "Speak naturally. juskoe fixes grammar and filler words, pastes clean text.",
+    description: "Speak naturally. jusay fixes grammar and filler words, pastes clean text.",
     side: "right",
   },
   {
@@ -50,7 +50,7 @@ const modes = [
     icon: Wand2,
     title: "Rewrite Mode",
     tagline: "Select text → rewrite it",
-    description: "Highlight any text, press F7, and tell juskoe how to transform it. Rewrite, summarize, translate — instantly.",
+    description: "Highlight any text, press F7, and tell jusay how to transform it. Rewrite, summarize, translate — instantly.",
     side: "right",
   },
 ];
@@ -153,7 +153,7 @@ const ModePill = ({ mode, isInView }: { mode: typeof modes[0]; isInView: boolean
               )}
               {phase === "done" && (
                 <span style={{ fontSize: 13, fontWeight: 700, color: "#2e2d2d", fontFamily: "Inter, sans-serif", letterSpacing: "0.01em" }}>
-                  juskoe
+                  jusay
                 </span>
               )}
             </motion.div>
@@ -331,7 +331,7 @@ export const BuiltForYou = () => {
               Teach it your vocabulary.
             </h3>
             <p className="text-[#2e2d2d]/50 leading-relaxed mb-5 max-w-sm text-base">
-              Add names, brands, and technical terms. juskoe transcribes them perfectly every time.
+              Add names, brands, and technical terms. jusay transcribes them perfectly every time.
             </p>
           </motion.div>
 
@@ -352,7 +352,7 @@ export const BuiltForYou = () => {
               <div className="space-y-2 relative z-10">
                 {[
                   { word: "Aishwanth Kumar", type: "Name" },
-                  { word: "juskoe", type: "Brand" },
+                  { word: "jusay", type: "Brand" },
                   { word: "Serendipity", type: "Word" },
                   { word: "Ephemeral", type: "Word" },
                   { word: "Eloquence", type: "Word" },
@@ -390,7 +390,7 @@ export const BuiltForYou = () => {
               paste full text.
             </h3>
             <p className="text-[#2e2d2d]/50 leading-relaxed mb-5 max-w-sm text-base md:ml-auto">
-              Create voice shortcuts for repeated content. Say the cue, juskoe expands it instantly.
+              Create voice shortcuts for repeated content. Say the cue, jusay expands it instantly.
             </p>
           </motion.div>
 
@@ -410,9 +410,9 @@ export const BuiltForYou = () => {
               </div>
               <div className="space-y-2 relative z-10">
                 {[
-                  { cue: "my email", value: "support@juskoe.in" },
-                  { cue: "book a call", value: "calendly.com/juskoe/30min" },
-                  { cue: "sign off", value: "Best, Aishwanth — Founder, juskoe" },
+                  { cue: "my email", value: "support@jusay.in" },
+                  { cue: "book a call", value: "calendly.com/jusay/30min" },
+                  { cue: "sign off", value: "Best, Aishwanth — Founder, jusay" },
                 ].map((snippet, i) => (
                   <motion.div
                     key={snippet.cue}
@@ -450,7 +450,7 @@ export const BuiltForYou = () => {
               Speak in any language.
             </h3>
             <p className="text-[#2e2d2d]/50 leading-relaxed mb-5 max-w-sm text-base">
-              juskoe supports 100+ languages out of the box. Switch between them seamlessly — no setup needed.
+              jusay supports 100+ languages out of the box. Switch between them seamlessly — no setup needed.
             </p>
           </motion.div>
 

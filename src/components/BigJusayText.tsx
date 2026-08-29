@@ -4,14 +4,13 @@ import { useRef, useState } from "react";
 const letters = [
     { char: "j", font: "Inter, sans-serif", weight: 900, italic: false },
     { char: "u", font: "Inter, sans-serif", weight: 900, italic: false },
-    { char: "s", font: "Inter, sans-serif", weight: 900, italic: false },
-    { char: "k", font: "'Times New Roman', Times, Georgia, serif", weight: 700, italic: true },
-    { char: "o", font: "'Times New Roman', Times, Georgia, serif", weight: 700, italic: true },
-    { char: "e", font: "'Times New Roman', Times, Georgia, serif", weight: 700, italic: true },
+    { char: "s", font: "'Times New Roman', Times, Georgia, serif", weight: 700, italic: true },
+    { char: "a", font: "'Times New Roman', Times, Georgia, serif", weight: 700, italic: true },
+    { char: "y", font: "'Times New Roman', Times, Georgia, serif", weight: 700, italic: true },
     { char: ".", font: "'Times New Roman', Times, Georgia, serif", weight: 700, italic: true },
 ];
 
-const BigJuskoeText = () => {
+const BigJusayText = () => {
     const ref = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -64,4 +63,4 @@ const BigJuskoeText = () => {
     );
 };
 
-export default BigJuskoeText;
+export default BigJusayText;

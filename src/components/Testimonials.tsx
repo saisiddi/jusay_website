@@ -6,7 +6,7 @@ const testimonials = [
     image: "https://images.unsplash.com/photo-1618641986557-1ecd230959aa?q=80&w=200&h=200&fit=crop",
     name: "Ravi Shankar",
     role: "Backend Developer, Bangalore",
-    text: "Honestly I installed juskoe just to try it out but now I literally can't work without it. I speak my commit messages, PR descriptions, everything. My team thinks I type super fast lol.",
+    text: "Honestly I installed jusay just to try it out but now I literally can't work without it. I speak my commit messages, PR descriptions, everything. My team thinks I type super fast lol.",
   },
   {
     image: null,
@@ -54,7 +54,7 @@ const testimonials = [
     image: "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=200&h=200&fit=crop",
     name: "Deepak Kumar",
     role: "DevOps Engineer",
-    text: "Using it for documentation mostly. I speak what the system does and juskoe turns it into proper technical docs. Beats staring at a blank page for 30 minutes trying to write.",
+    text: "Using it for documentation mostly. I speak what the system does and jusay turns it into proper technical docs. Beats staring at a blank page for 30 minutes trying to write.",
   },
 ];
 
@@ -112,7 +112,7 @@ const Testimonials = () => {
             viewport={{ once: true }}
             className="flex justify-center mb-4"
           >
-            <span className="badge-purple">People love Juskoe</span>
+            <span className="badge-purple">People love Jusay</span>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}

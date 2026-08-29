@@ -15,12 +15,12 @@ const steps = [
   {
     step: 1,
     title: "Press F9 anywhere",
-    desc: "Press F9 in any app. Juskoe opens the Notes overlay — ready to capture your thoughts without needing to type or switch windows.",
+    desc: "Press F9 in any app. Jusay opens the Notes overlay — ready to capture your thoughts without needing to type or switch windows.",
   },
   {
     step: 2,
     title: "Speak your thoughts",
-    desc: "Say whatever comes to mind. Ideas, reminders, meeting notes, to-do lists — just talk naturally and Juskoe transcribes it in real time.",
+    desc: "Say whatever comes to mind. Ideas, reminders, meeting notes, to-do lists — just talk naturally and Jusay transcribes it in real time.",
   },
   {
     step: 3,
@@ -30,14 +30,14 @@ const steps = [
   {
     step: 4,
     title: "Note is saved locally",
-    desc: "The note is saved to your local Juskoe Notes library. Pro users get cloud sync so notes are available across all your devices.",
+    desc: "The note is saved to your local Jusay Notes library. Pro users get cloud sync so notes are available across all your devices.",
   },
 ];
 
 const useCases = [
   { icon: StickyNote, title: "Quick capture", desc: "Capture ideas, reminders, and thoughts instantly without breaking your workflow." },
   { icon: ListTodo, title: "To-do lists", desc: "Speak your tasks and get organized lists. 'Buy groceries, call the plumber, finish the report.'" },
-  { icon: BookOpen, title: "Meeting notes", desc: "Dictate meeting notes in real time. Juskoe formats them cleanly so you never miss a detail." },
+  { icon: BookOpen, title: "Meeting notes", desc: "Dictate meeting notes in real time. Jusay formats them cleanly so you never miss a detail." },
 ];
 
 const NotesMode = () => (
