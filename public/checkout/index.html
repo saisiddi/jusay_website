@@ -161,6 +161,9 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
     document.getElementById('planBadge').textContent=d.badge;
     var btn=document.getElementById('payBtn');
     var isTrial=false;
+    // First-time Pro users get month 1 free: the create-subscription edge
+    // function sets start_at +30d and reports it back through this flag.
+    var firstMonthFree=(p.get('firstMonthFree')==='1'&&plan==='pro_monthly');
 
     if(!sid||!kid){
         btn.textContent='Invalid Link';
@@ -170,6 +173,11 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
     }
     btn.disabled=false;
     btn.textContent='Pay '+d.total;
+    if(firstMonthFree){
+        document.getElementById('planPrice').innerHTML='₹0 <span>for month 1</span><br><span style="font-size:12px;color:#059669;font-weight:500">🎁 1+1 — pay 1 month, get 2</span>';
+        document.getElementById('planBadge').textContent='1+1 OFFER';
+        btn.textContent='Start 1+1 Offer';
+    }
 
     // Hide coupon section for annual plans
     if(plan==='pro_annual'){
@@ -225,8 +233,8 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
         document.getElementById('statusMsg').textContent='';
         var rzpOpts={
             key:kid,subscription_id:sid,name:'Jusay',
-            description:isTrial?'Pro Monthly — 2 Month Free Trial':d.name+' Subscription',
-            image:'https://juskoe.in/juskoe-logo.png',
+            description:isTrial?'Pro Monthly — 2 Month Free Trial':d.name+' Subscription'+(firstMonthFree?' — first month free':''),
+            image:'https://jusaywebsite.vercel.app/jusay-logo.png',
             prefill:{name:name,email:email},
             theme:{color:'#2e2d2d'},
             handler:function(response){

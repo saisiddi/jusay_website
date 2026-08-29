@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useState, useCallback } from "react";
 import StarBorder from "./StarBorder";
 import "./StarBorder.css";
+import { useAuth } from "@/hooks/useAuth";
 
 const DOWNLOAD_URL =
   "https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=edca097e-fa85-4cca-8471-b59d29832104";
@@ -17,6 +18,7 @@ const navItems = [
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { session } = useAuth();
 
   // Robust scroll handler — works on both home and subpages
   const handleNavClick = useCallback(
@@ -112,6 +114,32 @@ const Navbar = () => {
 
               {/* Right side */}
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                {/* Single auth control — "Sign in" when signed out, "Account" when signed in */}
+                <Link
+                  to={session ? "/account" : "/login"}
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    fontSize: 14,
+                    color: "rgba(46,45,45,0.55)",
+                    padding: "6px 14px",
+                    fontWeight: 500,
+                    borderRadius: 8,
+                    textDecoration: "none",
+                    transition: "all 0.2s",
+                    cursor: "pointer",
+                    whiteSpace: "nowrap",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#7C3AED";
+                    e.currentTarget.style.backgroundColor = "rgba(124,58,237,0.06)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "rgba(46,45,45,0.55)";
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }}
+                >
+                  {session ? "Account" : "Sign in"}
+                </Link>
                 <a
                   href={DOWNLOAD_URL}
                   className="hidden md:inline-flex"

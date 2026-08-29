@@ -15,6 +15,10 @@ import AIMode from "./pages/AIMode";
 import GrammarMode from "./pages/GrammarMode";
 import NotesMode from "./pages/NotesMode";
 import RewriteMode from "./pages/RewriteMode";
+import Login from "./pages/Login";
+import AuthCallback from "./pages/AuthCallback";
+import Account from "./pages/Account";
+import { AuthProvider } from "@/hooks/useAuth";
 
 const queryClient = new QueryClient();
 
@@ -32,21 +36,29 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/modes/ai" element={<AIMode />} />
-          <Route path="/modes/grammar" element={<GrammarMode />} />
-          <Route path="/modes/notes" element={<NotesMode />} />
-          <Route path="/modes/rewrite" element={<RewriteMode />} />
+        <AuthProvider>
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/modes/ai" element={<AIMode />} />
+            <Route path="/modes/grammar" element={<GrammarMode />} />
+            <Route path="/modes/notes" element={<NotesMode />} />
+            <Route path="/modes/rewrite" element={<RewriteMode />} />
 
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            {/* Auth + billing (web). The desktop OAuth hand-off lives at the
+                static /auth/callback/ page and is intentionally not a SPA route. */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/auth/web-callback" element={<AuthCallback />} />
+            <Route path="/account" element={<Account />} />
+
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

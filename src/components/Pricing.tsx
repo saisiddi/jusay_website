@@ -2,6 +2,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Check, Zap, Crown, Star, Globe, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import ShinyText from "./ShinyText";
+import { startProCheckout } from "@/lib/checkout";
+
+/* Pro CTA → shared web checkout flow (signs the user in first if needed) */
+const handleProCta = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+  void startProCheckout({ plan: "pro_monthly" });
+};
 
 /* ── Location-aware pricing ── */
 const useIsIndia = () => {
@@ -363,7 +370,12 @@ const Pricing = () => {
 
                   {/* ── CTA — always at same vertical position ── */}
                   <motion.a
-                    href="https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=edca097e-fa85-4cca-8471-b59d29832104"
+                    href={
+                      isPro
+                        ? "/account"
+                        : "https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=edca097e-fa85-4cca-8471-b59d29832104"
+                    }
+                    onClick={isPro ? handleProCta : undefined}
                     whileHover={
                       isPro
                         ? {
