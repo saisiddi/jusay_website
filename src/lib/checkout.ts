@@ -8,10 +8,14 @@ export type PlanType = "pro_monthly" | "pro_annual";
 interface CreateSubscriptionResponse {
   success: boolean;
   /**
-   * True when this is a first-time Pro user, who gets the 1+1 offer: ₹49 charged
-   * today covers 60 days of Pro, next ₹49 on day 61.
+   * True when this is a first-time Pro user, who gets the offer: pay 1 month and
+   * get 1 month FREE. ₹49 charged today covers 60 days of Pro, next ₹49 on day 61.
    */
   bonusMonth?: boolean;
+  /** Days of Pro this payment buys (60 with the offer, 30 without). Informational. */
+  accessDays?: number;
+  /** Amount Razorpay charges today, in rupees. Informational. */
+  amountDueNow?: number;
   subscriptionId?: string;
   keyId?: string;
   error?: string;
@@ -32,7 +36,7 @@ export interface CheckoutParams {
   email: string;
   name: string;
   plan: PlanType;
-  /** Show the 1+1 offer copy on the checkout page (pay ₹49 now, get 2 months). */
+  /** Show the "Pay 1 month and Get 1 month FREE" offer copy on the checkout page. */
   bonusMonth?: boolean;
 }
 

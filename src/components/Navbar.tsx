@@ -5,9 +5,13 @@ import { useState, useCallback } from "react";
 import StarBorder from "./StarBorder";
 import "./StarBorder.css";
 import { useAuth } from "@/hooks/useAuth";
+import { requestDownload } from "@/lib/download";
 
-const DOWNLOAD_URL =
-  "https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=edca097e-fa85-4cca-8471-b59d29832104";
+/* Download is login-gated: signed out → /login, then it resumes automatically. */
+const handleDownloadClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+  void requestDownload();
+};
 
 const navItems = [
   { label: "Features", href: "#features" },
@@ -18,7 +22,13 @@ const navItems = [
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
-  const { session } = useAuth();
+  const { session, profile, isPro } = useAuth();
+
+  // Avatar source: Google picture if we have one, else the email's first letter.
+  const metadata = (session?.user?.user_metadata ?? {}) as Record<string, string | undefined>;
+  const accountEmail = profile?.email ?? session?.user?.email ?? "";
+  const avatarUrl = profile?.avatar_url ?? metadata.avatar_url ?? metadata.picture ?? "";
+  const avatarInitial = (accountEmail.trim()[0] ?? "J").toUpperCase();
 
   // Robust scroll handler — works on both home and subpages
   const handleNavClick = useCallback(
@@ -114,34 +124,113 @@ const Navbar = () => {
 
               {/* Right side */}
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                {/* Single auth control — "Sign in" when signed out, "Account" when signed in */}
-                <Link
-                  to={session ? "/account" : "/login"}
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    fontSize: 14,
-                    color: "rgba(46,45,45,0.55)",
-                    padding: "6px 14px",
-                    fontWeight: 500,
-                    borderRadius: 8,
-                    textDecoration: "none",
-                    transition: "all 0.2s",
-                    cursor: "pointer",
-                    whiteSpace: "nowrap",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "#7C3AED";
-                    e.currentTarget.style.backgroundColor = "rgba(124,58,237,0.06)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "rgba(46,45,45,0.55)";
-                    e.currentTarget.style.backgroundColor = "transparent";
-                  }}
-                >
-                  {session ? "Account" : "Sign in"}
-                </Link>
+                {/* Auth control — "Sign in" when signed out, avatar + plan badge when signed in */}
+                {session ? (
+                  <Link
+                    to="/account"
+                    onClick={() => setMobileOpen(false)}
+                    aria-label={`Your account — ${isPro ? "Pro" : "Free"} plan`}
+                    title={accountEmail ? `${accountEmail} · ${isPro ? "Pro" : "Free"}` : undefined}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                      padding: "3px 8px",
+                      borderRadius: 8,
+                      textDecoration: "none",
+                      transition: "all 0.2s",
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "rgba(124,58,237,0.06)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "transparent";
+                    }}
+                  >
+                    {avatarUrl ? (
+                      <img
+                        src={avatarUrl}
+                        alt=""
+                        referrerPolicy="no-referrer"
+                        draggable={false}
+                        style={{
+                          width: 24,
+                          height: 24,
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          flexShrink: 0,
+                          border: "1px solid rgba(124,58,237,0.25)",
+                        }}
+                      />
+                    ) : (
+                      <span
+                        aria-hidden="true"
+                        style={{
+                          width: 24,
+                          height: 24,
+                          borderRadius: "50%",
+                          flexShrink: 0,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: "rgba(124,58,237,0.12)",
+                          color: "#7C3AED",
+                          fontSize: 12,
+                          fontWeight: 800,
+                          lineHeight: 1,
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {avatarInitial}
+                      </span>
+                    )}
+                    <span
+                      style={{
+                        padding: "2px 5px",
+                        borderRadius: 5,
+                        fontSize: 9,
+                        fontWeight: 800,
+                        letterSpacing: "0.08em",
+                        lineHeight: 1.4,
+                        background: isPro ? "#7C3AED" : "rgba(46,45,45,0.08)",
+                        color: isPro ? "#ffffff" : "rgba(46,45,45,0.55)",
+                      }}
+                    >
+                      {isPro ? "PRO" : "FREE"}
+                    </span>
+                  </Link>
+                ) : (
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileOpen(false)}
+                    style={{
+                      fontSize: 14,
+                      color: "rgba(46,45,45,0.55)",
+                      padding: "6px 14px",
+                      fontWeight: 500,
+                      borderRadius: 8,
+                      textDecoration: "none",
+                      transition: "all 0.2s",
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "#7C3AED";
+                      e.currentTarget.style.backgroundColor = "rgba(124,58,237,0.06)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "rgba(46,45,45,0.55)";
+                      e.currentTarget.style.backgroundColor = "transparent";
+                    }}
+                  >
+                    Sign in
+                  </Link>
+                )}
                 <a
-                  href={DOWNLOAD_URL}
+                  href="/login"
+                  onClick={handleDownloadClick}
                   className="hidden md:inline-flex"
                   style={{
                     alignItems: "center",
@@ -226,8 +315,11 @@ const Navbar = () => {
               </a>
             ))}
             <a
-              href={DOWNLOAD_URL}
-              onClick={() => setMobileOpen(false)}
+              href="/login"
+              onClick={(e) => {
+                setMobileOpen(false);
+                handleDownloadClick(e);
+              }}
               style={{
                 display: "flex",
                 alignItems: "center",

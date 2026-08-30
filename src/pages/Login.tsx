@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import Wordmark from "@/components/Wordmark";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
+import { hasPendingDownload, resumePendingDownload } from "@/lib/download";
+import { startProCheckout, takeCheckoutIntent } from "@/lib/checkout";
 
 /** Official Google mark (Simple Icons / Google branding guidelines). */
 const GoogleIcon = () => (
@@ -27,12 +30,78 @@ const GoogleIcon = () => (
   </svg>
 );
 
+type Mode = "signin" | "signup";
+
+/**
+ * Turns a Supabase auth error into something a person can act on.
+ * Supabase returns fairly terse strings, so the common ones are mapped by hand.
+ */
+const friendlyAuthError = (raw: string, mode: Mode): string => {
+  const message = raw.toLowerCase();
+
+  if (message.includes("email not confirmed") || message.includes("not confirmed")) {
+    return "Your email isn't confirmed yet. Open the confirmation link we emailed you, then sign in.";
+  }
+  if (message.includes("invalid login credentials")) {
+    return "That email and password don't match. Check your password, or create an account if you're new.";
+  }
+  if (
+    message.includes("already registered") ||
+    message.includes("already been registered") ||
+    message.includes("user already exists")
+  ) {
+    return "That email already has an account. Sign in instead, or reset your password.";
+  }
+  if (message.includes("password should be at least")) {
+    return "Passwords need at least 6 characters.";
+  }
+  if (message.includes("unable to validate email") || message.includes("invalid email")) {
+    return "That doesn't look like a valid email address.";
+  }
+  if (message.includes("rate limit") || message.includes("too many")) {
+    return "Too many attempts. Wait a minute and try again.";
+  }
+  if (message.includes("signups not allowed") || message.includes("signup is disabled")) {
+    return "New sign-ups are paused right now. Try Google sign-in instead.";
+  }
+  return raw || (mode === "signup" ? "Could not create your account." : "Could not sign you in.");
+};
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "11px 12px",
+  borderRadius: 10,
+  border: "1px solid rgba(46,45,45,0.15)",
+  background: "#ffffff",
+  color: "#2e2d2d",
+  fontSize: 14,
+  fontFamily: "inherit",
+  outline: "none",
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontSize: 12,
+  fontWeight: 700,
+  color: "rgba(46,45,45,0.6)",
+  marginBottom: 6,
+};
+
 const Login = () => {
   const navigate = useNavigate();
-  const { session, loading, signInWithGoogle } = useAuth();
+  const { session, profile, loading, signInWithGoogle } = useAuth();
   const reduceMotion = useReducedMotion();
+
+  const [mode, setMode] = useState<Mode>("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  // A download click is what usually sends people here, so say so up front.
+  const pendingDownload = useMemo(hasPendingDownload, []);
 
   useEffect(() => {
     document.title = "Sign in — Jusay";
@@ -41,14 +110,32 @@ const Login = () => {
     };
   }, []);
 
-  // Already signed in (or just came back from Google) → straight to the account page.
+  // Already signed in (or just came back from Google) → finish what they started.
   useEffect(() => {
-    if (!loading && session) navigate("/account", { replace: true });
-  }, [loading, session, navigate]);
+    if (loading || !session) return;
+
+    // A pending download fires right here — an anchor click, so it does not
+    // navigate away and the upgrade intent below still gets its turn.
+    resumePendingDownload();
+
+    const pendingUpgrade = takeCheckoutIntent();
+    if (pendingUpgrade) {
+      void startProCheckout({
+        plan: pendingUpgrade,
+        fullName: profile?.full_name ?? session.user?.user_metadata?.full_name ?? null,
+      }).then((started) => {
+        if (!started) navigate("/account", { replace: true });
+      });
+      return;
+    }
+
+    navigate("/account", { replace: true });
+  }, [loading, session, profile, navigate]);
 
   const handleGoogle = async () => {
     setError(null);
-    setSubmitting(true);
+    setNotice(null);
+    setGoogleBusy(true);
     try {
       await signInWithGoogle(`${window.location.origin}/auth/web-callback`);
       // On success the browser leaves this page for Google's consent screen.
@@ -58,11 +145,93 @@ const Login = () => {
           ? err.message
           : "Could not start Google sign-in. Please try again."
       );
+      setGoogleBusy(false);
+    }
+  };
+
+  const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+    setNotice(null);
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !password) {
+      setError("Enter your email and password.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      if (mode === "signup") {
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email: trimmedEmail,
+          password,
+          options: { emailRedirectTo: `${window.location.origin}/auth/web-callback` },
+        });
+        if (signUpError) {
+          setError(friendlyAuthError(signUpError.message, "signup"));
+          return;
+        }
+        // Supabase returns a user with no identities when the address is taken
+        // and "confirm email" is on, rather than an explicit error.
+        if (data.user && data.user.identities && data.user.identities.length === 0) {
+          setError("That email already has an account. Sign in instead, or reset your password.");
+          setMode("signin");
+          return;
+        }
+        if (!data.session) {
+          setNotice(
+            `Check ${trimmedEmail} for a confirmation link. Once confirmed, come back and sign in.`
+          );
+          setPassword("");
+          return;
+        }
+        // Email confirmation is off → the session effect above takes over.
+        return;
+      }
+
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: trimmedEmail,
+        password,
+      });
+      if (signInError) {
+        setError(friendlyAuthError(signInError.message, "signin"));
+        return;
+      }
+      // Signed in → the session effect above resumes any pending download/upgrade.
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
       setSubmitting(false);
     }
   };
 
-  const busy = loading || submitting;
+  const handleReset = async () => {
+    setError(null);
+    setNotice(null);
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      setError("Enter your email address first, then tap Forgot password.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
+        redirectTo: `${window.location.origin}/auth/web-callback`,
+      });
+      if (resetError) {
+        setError(friendlyAuthError(resetError.message, "signin"));
+        return;
+      }
+      setNotice(`Password reset link sent to ${trimmedEmail}. Check your inbox.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not send the reset email.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const busy = loading || submitting || googleBusy;
 
   return (
     <div
@@ -117,11 +286,12 @@ const Login = () => {
             marginBottom: 8,
           }}
         >
-          Sign in to Jusay
+          {mode === "signup" ? "Create your Jusay account" : "Sign in to Jusay"}
         </h1>
         <p style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(46,45,45,0.6)", marginBottom: 24 }}>
-          Use your Google account to manage your plan, sync your notes and start your free
-          Pro month.
+          {pendingDownload
+            ? "Sign in and your download starts automatically."
+            : "Manage your plan, sync your notes and download Jusay for Windows."}
         </p>
 
         <button
@@ -155,15 +325,176 @@ const Login = () => {
             e.currentTarget.style.borderColor = "rgba(46,45,45,0.15)";
           }}
         >
-          {submitting ? (
+          {googleBusy ? (
             <Loader2 style={{ width: 16, height: 16 }} className="animate-spin" />
           ) : (
             <GoogleIcon />
           )}
-          {submitting ? "Opening Google…" : "Continue with Google"}
+          {googleBusy ? "Opening Google…" : "Continue with Google"}
         </button>
 
-        {loading && !submitting && (
+        {/* Divider */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            margin: "20px 0",
+          }}
+        >
+          <span style={{ flex: 1, height: 1, background: "rgba(46,45,45,0.1)" }} />
+          <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(46,45,45,0.35)", letterSpacing: "0.08em" }}>
+            OR
+          </span>
+          <span style={{ flex: 1, height: 1, background: "rgba(46,45,45,0.1)" }} />
+        </div>
+
+        <form onSubmit={handleEmailSubmit} noValidate>
+          <div style={{ marginBottom: 14 }}>
+            <label htmlFor="login-email" style={labelStyle}>
+              Email
+            </label>
+            <input
+              id="login-email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              disabled={busy}
+              style={inputStyle}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = "rgba(124,58,237,0.55)";
+                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(124,58,237,0.12)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = "rgba(46,45,45,0.15)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: 18 }}>
+            <label htmlFor="login-password" style={labelStyle}>
+              Password
+            </label>
+            <input
+              id="login-password"
+              name="password"
+              type="password"
+              autoComplete={mode === "signup" ? "new-password" : "current-password"}
+              required
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={mode === "signup" ? "At least 6 characters" : "Your password"}
+              disabled={busy}
+              style={inputStyle}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = "rgba(124,58,237,0.55)";
+                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(124,58,237,0.12)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = "rgba(46,45,45,0.15)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={busy}
+            style={{
+              width: "100%",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              padding: "12px 20px",
+              borderRadius: 10,
+              border: "none",
+              background: "linear-gradient(135deg, #7C3AED, #5b21b6)",
+              color: "#ffffff",
+              fontSize: 14,
+              fontWeight: 700,
+              cursor: busy ? "progress" : "pointer",
+              opacity: busy ? 0.7 : 1,
+              transition: "box-shadow 0.2s, opacity 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              if (!busy) e.currentTarget.style.boxShadow = "0 12px 32px rgba(124,58,237,0.28)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = "none";
+            }}
+          >
+            {submitting && <Loader2 style={{ width: 16, height: 16 }} className="animate-spin" />}
+            {submitting
+              ? mode === "signup"
+                ? "Creating account…"
+                : "Signing in…"
+              : mode === "signup"
+                ? "Create account"
+                : "Sign in"}
+          </button>
+        </form>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            marginTop: 14,
+            flexWrap: "wrap",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setMode(mode === "signup" ? "signin" : "signup");
+              setError(null);
+              setNotice(null);
+            }}
+            disabled={busy}
+            style={{
+              background: "none",
+              border: "none",
+              padding: 0,
+              fontSize: 13,
+              fontWeight: 600,
+              color: "#7C3AED",
+              cursor: busy ? "progress" : "pointer",
+              fontFamily: "inherit",
+            }}
+          >
+            {mode === "signup" ? "Already have an account? Sign in" : "New here? Create an account"}
+          </button>
+
+          {mode === "signin" && (
+            <button
+              type="button"
+              onClick={handleReset}
+              disabled={busy}
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                fontSize: 13,
+                fontWeight: 500,
+                color: "rgba(46,45,45,0.55)",
+                cursor: busy ? "progress" : "pointer",
+                fontFamily: "inherit",
+              }}
+            >
+              Forgot password?
+            </button>
+          )}
+        </div>
+
+        {loading && !submitting && !googleBusy && (
           <p
             style={{
               display: "flex",
@@ -177,6 +508,27 @@ const Login = () => {
             <Loader2 style={{ width: 14, height: 14 }} className="animate-spin" />
             Checking your session…
           </p>
+        )}
+
+        {notice && (
+          <div
+            role="status"
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 8,
+              marginTop: 16,
+              padding: "10px 12px",
+              borderRadius: 8,
+              background: "rgba(5,150,105,0.06)",
+              border: "1px solid rgba(5,150,105,0.2)",
+            }}
+          >
+            <CheckCircle2
+              style={{ width: 16, height: 16, color: "#059669", flexShrink: 0, marginTop: 1 }}
+            />
+            <span style={{ fontSize: 13, color: "#047857", lineHeight: 1.5 }}>{notice}</span>
+          </div>
         )}
 
         {error && (

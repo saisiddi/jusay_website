@@ -1,12 +1,32 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
-import { Crown, Loader2, LogOut, Mail, Sparkles, User as UserIcon } from "lucide-react";
+import { CalendarClock, Crown, Loader2, LogOut, Mail, Sparkles, User as UserIcon } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Wordmark from "@/components/Wordmark";
 import { useAuth } from "@/hooks/useAuth";
 import { startProCheckout } from "@/lib/checkout";
+import { supabase } from "@/lib/supabase";
+
+/** The one canonical offer line. Keep in sync with src/components/Pricing.tsx. */
+const OFFER_LINE = "Pay 1 month and Get 1 month FREE";
+
+/** Read-only shape of the `subscriptions` row we surface here. */
+interface SubscriptionRow {
+  status: string | null;
+  current_period_end: string | null;
+}
+
+const formatDate = (iso: string): string => {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString(undefined, {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+};
 
 const Account = () => {
   const navigate = useNavigate();
@@ -14,6 +34,7 @@ const Account = () => {
   const reduceMotion = useReducedMotion();
   const [upgrading, setUpgrading] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [subscription, setSubscription] = useState<SubscriptionRow | null>(null);
 
   useEffect(() => {
     document.title = "Your account — Jusay";
@@ -27,10 +48,47 @@ const Account = () => {
     if (!loading && !user) navigate("/login", { replace: true });
   }, [loading, user, navigate]);
 
+  // Read-only look at the billing period. RLS limits this to the caller's rows.
+  useEffect(() => {
+    if (!user) {
+      setSubscription(null);
+      return;
+    }
+    let active = true;
+    void supabase
+      .from("subscriptions")
+      .select("status, current_period_end")
+      .eq("user_id", user.id)
+      .order("current_period_end", { ascending: false, nullsFirst: false })
+      .limit(1)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (!active) return;
+        if (error) {
+          console.error("[jusay] could not load subscription:", error.message);
+          setSubscription(null);
+          return;
+        }
+        setSubscription((data as SubscriptionRow | null) ?? null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [user]);
+
   const metadata = (user?.user_metadata ?? {}) as Record<string, string | undefined>;
   const email = profile?.email ?? user?.email ?? "";
   const fullName = profile?.full_name ?? metadata.full_name ?? metadata.name ?? "";
   const avatarUrl = profile?.avatar_url ?? metadata.avatar_url ?? metadata.picture ?? "";
+
+  // "Renews on" while the subscription is live, "Access until" once cancelled.
+  const periodEnd = subscription?.current_period_end
+    ? formatDate(subscription.current_period_end)
+    : "";
+  const renewing = subscription?.status === "active" || subscription?.status === "trialing";
+  const periodLabel = periodEnd
+    ? `${renewing ? "Renews on" : "Access until"} ${periodEnd}`
+    : "";
 
   const handleUpgrade = async () => {
     setUpgrading(true);
@@ -272,15 +330,31 @@ const Account = () => {
                   ) : (
                     <Sparkles style={{ width: 14, height: 14 }} aria-hidden="true" />
                   )}
-                  {upgrading ? "Starting checkout…" : "Upgrade to Pro — 1+1, pay 1 month get 2"}
+                  {upgrading ? "Starting checkout…" : `Upgrade to Pro — ${OFFER_LINE}`}
                 </button>
               )}
             </div>
 
+            {isPro && periodLabel && (
+              <p
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  fontSize: 12,
+                  color: "rgba(46,45,45,0.55)",
+                  marginTop: 14,
+                }}
+              >
+                <CalendarClock style={{ width: 14, height: 14, flexShrink: 0 }} aria-hidden="true" />
+                {periodLabel}
+              </p>
+            )}
+
             {!isPro && (
               <p style={{ fontSize: 11, color: "rgba(46,45,45,0.4)", marginTop: 12, lineHeight: 1.6 }}>
-                New Pro users get 1+1: pay ₹49 today and get 2 months, then ₹49/month.
-                Cancel anytime from Jusay app settings.
+                New Pro users get the launch offer: {OFFER_LINE}. ₹49 today covers 2 months,
+                then ₹49/month. Cancel anytime from Jusay app settings.
               </p>
             )}
 

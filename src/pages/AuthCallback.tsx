@@ -4,6 +4,7 @@ import { AlertCircle, Loader2 } from "lucide-react";
 import Wordmark from "@/components/Wordmark";
 import { useAuth } from "@/hooks/useAuth";
 import { takeCheckoutIntent, startProCheckout } from "@/lib/checkout";
+import { resumePendingDownload } from "@/lib/download";
 
 /**
  * Web OAuth landing route (/auth/web-callback).
@@ -51,6 +52,11 @@ const AuthCallback = () => {
 
     // Clean the OAuth params out of the address bar before moving on.
     window.history.replaceState({}, document.title, "/auth/web-callback");
+
+    // Resume a download the visitor asked for before signing in. This is an
+    // anchor click, so it does not navigate away — the upgrade intent below
+    // still gets its turn, and either way we land on /account.
+    resumePendingDownload();
 
     const pendingUpgrade = takeCheckoutIntent();
     if (pendingUpgrade) {

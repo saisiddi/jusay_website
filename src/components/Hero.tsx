@@ -4,6 +4,13 @@ import { useRef, useState, useEffect } from "react";
 import BlurText from "./BlurText";
 import ShinyText from "./ShinyText";
 import { Flame, Keyboard, Timer, Minus, Square, X } from "lucide-react";
+import { requestDownload } from "@/lib/download";
+
+/* Download is login-gated: signed out → /login, then it resumes automatically. */
+const handleDownloadClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+  void requestDownload();
+};
 
 // Scrolling words that cycle through
 const aiWords = ["leave application", "cold email", "meeting summary", "product brief", "LinkedIn post"];
@@ -276,7 +283,8 @@ const Hero = () => {
           className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4"
         >
           <motion.a
-            href="https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=edca097e-fa85-4cca-8471-b59d29832104"
+            href="/login"
+            onClick={handleDownloadClick}
             whileHover={{ backgroundColor: "#2e1a0e", boxShadow: "0 8px 32px rgba(26,10,14,0.35)" }}
             whileTap={{ scale: 0.97 }}
             className="inline-flex items-center gap-2.5 px-8 py-3.5 text-white font-bold text-sm transition-all"

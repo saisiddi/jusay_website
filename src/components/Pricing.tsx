@@ -3,11 +3,21 @@ import { Check, Zap, Crown, Star, Globe, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import ShinyText from "./ShinyText";
 import { startProCheckout } from "@/lib/checkout";
+import { requestDownload } from "@/lib/download";
+
+/* The one canonical offer line. Keep this string in sync with /checkout/. */
+const OFFER_LINE = "Pay 1 month and Get 1 month FREE";
 
 /* Pro CTA → shared web checkout flow (signs the user in first if needed) */
 const handleProCta = (e: React.MouseEvent<HTMLAnchorElement>) => {
   e.preventDefault();
   void startProCheckout({ plan: "pro_monthly" });
+};
+
+/* Free CTA → login-gated download; resumes automatically after sign-in */
+const handleDownloadClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+  void requestDownload();
 };
 
 /* ── Location-aware pricing ── */
@@ -35,12 +45,11 @@ const getPlans = (isIndia: boolean) => [
     price: isIndia ? "₹0" : "$0",
     period: "forever",
     monthlyPrice: null,
-    yearlyPrice: null,
 
     icon: Zap,
     color: "#2e2d2d",
     popular: false,
-    cta: "Download Free",
+    cta: "Free Download",
     usageItems: [
       "25 uses/day total",
       "10 AI (F7)",
@@ -67,7 +76,6 @@ const getPlans = (isIndia: boolean) => [
     price: null,
     period: null,
     monthlyPrice: isIndia ? "₹49" : "$10",
-    yearlyPrice: isIndia ? "₹300" : "$8",
 
     icon: Crown,
     color: "#7C3AED",
@@ -91,72 +99,9 @@ const getPlans = (isIndia: boolean) => [
   },
 ];
 
-/* ── Billing toggle ── */
-const BillingToggle = ({
-  isAnnual,
-  onToggle,
-}: {
-  isAnnual: boolean;
-  onToggle: () => void;
-}) => (
-  <div className="flex justify-center">
-    <div className="relative flex items-center gap-3">
-      <span
-        className="text-sm font-semibold transition-colors duration-300"
-        style={{ color: !isAnnual ? "#2e2d2d" : "#2e2d2d50" }}
-      >
-        Monthly
-      </span>
-      <button
-        onClick={onToggle}
-        className="relative w-14 h-7 rounded-full transition-all duration-300 flex-shrink-0"
-        style={{
-          background: isAnnual
-            ? "linear-gradient(135deg, #7C3AED, #a78bfa)"
-            : "#c4c4c4",
-          boxShadow: isAnnual
-            ? "0 0 16px rgba(124,58,237,0.45), 0 0 4px rgba(124,58,237,0.3)"
-            : "inset 0 1px 3px rgba(0,0,0,0.1)",
-        }}
-      >
-        <motion.div
-          className="absolute top-0.5 w-6 h-6 bg-white rounded-full"
-          layout
-          style={{
-            left: isAnnual ? 30 : 2,
-            boxShadow: isAnnual
-              ? "0 2px 8px rgba(124,58,237,0.3)"
-              : "0 1px 4px rgba(0,0,0,0.15)",
-          }}
-          transition={{ type: "spring", stiffness: 500, damping: 30 }}
-        />
-      </button>
-      <span
-        className="text-sm font-semibold transition-colors duration-300"
-        style={{ color: isAnnual ? "#7C3AED" : "#2e2d2d50" }}
-      >
-        Annual
-      </span>
-      {/* Absolute so it doesn't shift the centered toggle */}
-      <span
-        className="absolute left-full ml-3 text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap transition-all duration-300"
-        style={{
-          background: isAnnual ? "rgba(124,58,237,0.1)" : "transparent",
-          color: isAnnual ? "#7C3AED" : "transparent",
-          transform: isAnnual ? "scale(1)" : "scale(0.85)",
-          opacity: isAnnual ? 1 : 0,
-        }}
-      >
-        SAVE MORE
-      </span>
-    </div>
-  </div>
-);
-
 /* ── Pricing section ── */
 const Pricing = () => {
   const isIndia = useIsIndia();
-  const [isAnnual, setIsAnnual] = useState(false);
   const plans = getPlans(isIndia);
 
   return (
@@ -225,17 +170,6 @@ const Pricing = () => {
             Start free. Upgrade when you're ready. No surprises.
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-          >
-            <BillingToggle
-              isAnnual={isAnnual}
-              onToggle={() => setIsAnnual(!isAnnual)}
-            />
-          </motion.div>
         </div>
 
         {/* ── Cards ── */}
@@ -243,13 +177,8 @@ const Pricing = () => {
           {plans.map((plan, i) => {
             const Icon = plan.icon;
             const isPro = plan.popular;
-            const displayPrice =
-              plan.price ??
-              (isAnnual ? plan.yearlyPrice : plan.monthlyPrice) ??
-              "";
-            const displayPeriod =
-              plan.period ??
-              (isAnnual ? "/mo (billed annually)" : "/mo");
+            const displayPrice = plan.price ?? plan.monthlyPrice ?? "";
+            const displayPeriod = plan.period ?? "/mo";
 
             return (
               <motion.div
@@ -357,12 +286,12 @@ const Pricing = () => {
                       </span>
                     </div>
 
-                    {isPro && !isAnnual && (
+                    {isPro && (
                       <p
                         className="text-[11px] font-bold mb-1"
                         style={{ color: "#7C3AED" }}
                       >
-                        🎁 1+1 — pay 1 month, get 2
+                        {OFFER_LINE}
                       </p>
                     )}
 
@@ -370,12 +299,8 @@ const Pricing = () => {
 
                   {/* ── CTA — always at same vertical position ── */}
                   <motion.a
-                    href={
-                      isPro
-                        ? "/account"
-                        : "https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=edca097e-fa85-4cca-8471-b59d29832104"
-                    }
-                    onClick={isPro ? handleProCta : undefined}
+                    href={isPro ? "/account" : "/login"}
+                    onClick={isPro ? handleProCta : handleDownloadClick}
                     whileHover={
                       isPro
                         ? {

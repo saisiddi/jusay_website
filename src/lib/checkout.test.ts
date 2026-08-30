@@ -29,7 +29,7 @@ describe("buildCheckoutUrl", () => {
     expect(url.searchParams.get("plan")).toBe("pro_monthly");
   });
 
-  it("omits bonusMonth unless the edge function granted the 1+1 offer", () => {
+  it("omits bonusMonth unless the edge function granted the offer", () => {
     const without = new URL(buildCheckoutUrl("https://x.dev", base));
     expect(without.searchParams.has("bonusMonth")).toBe(false);
 
@@ -37,6 +37,35 @@ describe("buildCheckoutUrl", () => {
       buildCheckoutUrl("https://x.dev", { ...base, bonusMonth: true })
     );
     expect(withFlag.searchParams.get("bonusMonth")).toBe("1");
+  });
+
+  // The checkout page reads exactly `bonusMonth=1`; anything else silently
+  // drops the offer copy and the customer sees the plain ₹49/month price.
+  it("forwards bonusMonth as the literal '1' the checkout page tests for", () => {
+    const url = new URL(buildCheckoutUrl("https://x.dev", { ...base, bonusMonth: true }));
+    expect(url.searchParams.get("bonusMonth")).toBe("1");
+    expect(url.searchParams.get("bonusMonth")).not.toBe("true");
+  });
+
+  it("treats a false or undefined bonusMonth as no offer", () => {
+    const explicitFalse = new URL(
+      buildCheckoutUrl("https://x.dev", { ...base, bonusMonth: false })
+    );
+    expect(explicitFalse.searchParams.has("bonusMonth")).toBe(false);
+
+    const undefinedFlag = new URL(
+      buildCheckoutUrl("https://x.dev", { ...base, bonusMonth: undefined })
+    );
+    expect(undefinedFlag.searchParams.has("bonusMonth")).toBe(false);
+  });
+
+  it("keeps bonusMonth alongside the monthly plan the offer applies to", () => {
+    const url = new URL(
+      buildCheckoutUrl("https://x.dev", { ...base, plan: "pro_monthly", bonusMonth: true })
+    );
+    // The checkout page gates the offer on plan === 'pro_monthly'.
+    expect(url.searchParams.get("plan")).toBe("pro_monthly");
+    expect(url.searchParams.get("bonusMonth")).toBe("1");
   });
 
   it("never advertises the old firstMonthFree param", () => {

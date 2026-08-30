@@ -2,6 +2,13 @@ import { motion } from "framer-motion";
 import { useState, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Twitter, Mail } from "lucide-react";
+import { requestDownload } from "@/lib/download";
+
+/* Download is login-gated: signed out → /login, then it resumes automatically. */
+const handleDownloadClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+  void requestDownload();
+};
 
 const footerLinks = {
   Product: [
@@ -115,7 +122,8 @@ const Footer = () => {
             </p>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               <motion.a
-                href="https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=edca097e-fa85-4cca-8471-b59d29832104"
+                href="/login"
+                onClick={handleDownloadClick}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.97 }}
                 style={{
