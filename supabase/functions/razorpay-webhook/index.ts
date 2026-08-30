@@ -114,17 +114,23 @@ serve(async (req) => {
                     .update(subUpdate)
                     .eq('razorpay_subscription_id', subscriptionId);
 
-                // Update profile to Pro
-                await supabase
+                // UPSERT, not UPDATE. If the profile row is missing (the signup
+                // trigger having skipped this user), a plain update writes
+                // nothing and the paid user is stranded on Free. Insert-or-update
+                // guarantees Pro is granted even when confirm-payment never ran
+                // because the payer closed the tab.
+                const emailNote = subscription.notes?.email;
+                const { error: profErr } = await supabase
                     .from('profiles')
-                    .update({
+                    .upsert({
+                        id: userId,
+                        email: emailNote || `${userId}@no-email.local`,
                         plan: 'pro',
                         subscription_status: 'active',
                         updated_at: new Date().toISOString(),
-                    })
-                    .eq('id', userId);
-
-                console.log(`[webhook] User ${userId} upgraded to Pro`);
+                    }, { onConflict: 'id' });
+                if (profErr) console.error(`[webhook] profile upsert failed for ${userId}: ${profErr.message}`);
+                else console.log(`[webhook] User ${userId} upgraded to Pro`);
                 break;
             }
 
