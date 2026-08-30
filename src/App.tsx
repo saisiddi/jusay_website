@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -6,19 +6,23 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import About from "./pages/About";
-import Privacy from "./pages/Privacy";
-import Terms from "./pages/Terms";
-import Contact from "./pages/Contact";
-import AIMode from "./pages/AIMode";
-import GrammarMode from "./pages/GrammarMode";
-import NotesMode from "./pages/NotesMode";
-import RewriteMode from "./pages/RewriteMode";
-import Login from "./pages/Login";
-import AuthCallback from "./pages/AuthCallback";
-import Account from "./pages/Account";
 import { AuthProvider } from "@/hooks/useAuth";
+
+// The landing page (Index) loads eagerly since it's the entry point. Every
+// other route is code-split so its JS is only fetched when visited, keeping
+// the initial page load small and snappy.
+const NotFound = lazy(() => import("./pages/NotFound"));
+const About = lazy(() => import("./pages/About"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Terms = lazy(() => import("./pages/Terms"));
+const Contact = lazy(() => import("./pages/Contact"));
+const AIMode = lazy(() => import("./pages/AIMode"));
+const GrammarMode = lazy(() => import("./pages/GrammarMode"));
+const NotesMode = lazy(() => import("./pages/NotesMode"));
+const RewriteMode = lazy(() => import("./pages/RewriteMode"));
+const Login = lazy(() => import("./pages/Login"));
+const AuthCallback = lazy(() => import("./pages/AuthCallback"));
+const Account = lazy(() => import("./pages/Account"));
 
 const queryClient = new QueryClient();
 
@@ -38,6 +42,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <ScrollToTop />
+          <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
@@ -58,6 +63,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
