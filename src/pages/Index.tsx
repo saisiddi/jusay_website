@@ -2,6 +2,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import AppMarquee from "@/components/AppMarquee";
+import DownloadStats from "@/components/DownloadStats";
 import { ThreeModes, BuiltForYou } from "@/components/Features";
 import HowItWorks from "@/components/HowItWorks";
 
@@ -34,6 +35,8 @@ const Index = () => {
         </section>
 
         <AppMarquee />
+
+        <DownloadStats />
 
         {/* Three Modes — WITH tiles + clouds (dark bg) */}
         <section className="bg-grid" style={{ backgroundColor: "#0f0520" }}>

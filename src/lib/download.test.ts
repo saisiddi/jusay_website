@@ -15,19 +15,15 @@ const recorder = () => {
 };
 
 describe("DOWNLOAD_URL", () => {
-  it("is byte-identical to the live Firebase object", () => {
-    expect(DOWNLOAD_URL).toBe(
-      "https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=edca097e-fa85-4cca-8471-b59d29832104"
-    );
+  it("points at the installer bundled in the site's public/ folder", () => {
+    expect(DOWNLOAD_URL).toBe("/Jusay-Setup-1.0.0.exe");
   });
 
-  it("keeps the encoded filename, alt=media and download token intact", () => {
-    const url = new URL(DOWNLOAD_URL);
-    expect(url.pathname).toBe(
-      "/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe"
-    );
-    expect(url.searchParams.get("alt")).toBe("media");
-    expect(url.searchParams.get("token")).toBe("edca097e-fa85-4cca-8471-b59d29832104");
+  it("is a root-relative .exe path (served same-origin, no query needed)", () => {
+    const url = new URL(DOWNLOAD_URL, "https://jusay.in");
+    expect(url.pathname).toBe("/Jusay-Setup-1.0.0.exe");
+    expect(url.pathname.endsWith(".exe")).toBe(true);
+    expect(url.search).toBe("");
   });
 });
 

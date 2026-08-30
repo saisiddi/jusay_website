@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { getSession } from "@/lib/supabase";
+import { recordDownload } from "@/lib/stats";
 
 /**
  * Canonical Windows installer URL.
@@ -75,6 +76,8 @@ const openViaAnchor: OpenUrl = (url) => {
 /** Starts the installer download right now, no auth check. Returns the URL used. */
 export const startDownload = (open: OpenUrl = openViaAnchor): string => {
   open(DOWNLOAD_URL);
+  // Count the completed download. Fire-and-forget; never blocks the transfer.
+  void recordDownload();
   return DOWNLOAD_URL;
 };
 
