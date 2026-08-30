@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Mic, Zap, Globe, Heart, Linkedin, Mail } from "lucide-react";
+import { Zap, Globe, Heart, Phone, Mail } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -27,31 +27,34 @@ const values = [
   {
     icon: Heart,
     title: "Built With Passion",
-    desc: "Jusay was built by two developers who were tired of typing. Every feature exists because it was needed.",
+    desc: "Jusay was built by a small team who were tired of typing. Every feature exists because it was needed.",
   },
 ];
 
-const founders = [
+const team = [
   {
     name: "Aishwanth M S",
-    role: "CEO & Founder",
-    email: "aishwanth@jusay.in",
-    linkedin: "https://www.linkedin.com/in/aishwanth/",
-    bio: "Aishwanth is a full-stack developer and AI entrepreneur who architected Jusay from the ground up. As CEO, he leads product vision, engineering strategy, and the mission to make voice the universal input layer for every desktop application. He built Jusay to solve his own productivity frustrations - and it's now relied upon by thousands of users worldwide.",
+    role: "Developer",
+    phone: "+91 8667487210",
+    email: "aishwanth.dev@gmail.com",
   },
   {
     name: "Vishwajeeth Rao B",
-    role: "Co-Founder",
-    email: "vishwajeeth@jusay.in",
-    linkedin: "https://www.linkedin.com/in/vishwajeeth-rao-b-7a1764381/",
-    bio: "Vishwajeeth brings strategic product thinking and operational excellence to Jusay. As Co-Founder, he drives user growth, partnerships, and the overall product roadmap - ensuring every feature we ship genuinely improves how people work and communicate with voice AI technology.",
+    role: "Developer",
+    phone: "+91 8884543690",
+    email: "vishwajeeth.rao.2021@gmail.com",
   },
   {
     name: "Govind D S",
-    role: "Co-Founder & CTO",
-    email: "govind@jusay.in",
-    linkedin: "https://www.linkedin.com/in/govind-ds-162801355/",
-    bio: "Govind leads the technical architecture and engineering teams at Jusay. As Co-Founder & CTO, he oversees the AI/ML pipeline, speech-to-text inference, system-level integrations, and cloud infrastructure - ensuring Jusay delivers blazing-fast, accurate voice recognition across Windows and macOS with enterprise-grade reliability.",
+    role: "Marketing & Frontend",
+    phone: "+91 7892873535",
+    email: "govind.dhondale@gmail.com",
+  },
+  {
+    name: "Kalmadi Saisiddi",
+    role: "Revenue & Frontend",
+    phone: "+91 8792526242",
+    email: "kalmadisaisiddi@gmail.com",
   },
 ];
 
@@ -231,7 +234,7 @@ const About = () => {
           custom={0}
         >
           <h2 style={{ fontSize: 32, fontWeight: 700, marginBottom: 12, textAlign: "center", color: "#2e2d2d" }}>
-            Meet the Founders
+            Meet the Team
           </h2>
           <p
             style={{
@@ -253,7 +256,7 @@ const About = () => {
               gap: 24,
             }}
           >
-            {founders.map((f, i) => (
+            {team.map((f, i) => (
               <motion.div
                 key={f.name}
                 initial="hidden"
@@ -262,7 +265,7 @@ const About = () => {
                 variants={fadeUp}
                 custom={i + 1}
                 style={{
-                  padding: 32,
+                  padding: 28,
                   borderRadius: 16,
                   backgroundColor: "#fff",
                   border: "1px solid rgba(124,58,237,0.1)",
@@ -272,79 +275,43 @@ const About = () => {
                   height: "100%",
                 }}
               >
-                <h3 style={{ fontSize: 22, fontWeight: 700, marginBottom: 4, color: "#2e2d2d" }}>{f.name}</h3>
-                <p style={{ fontSize: 14, color: "#7C3AED", fontWeight: 600, marginBottom: 16 }}>
+                <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4, color: "#2e2d2d" }}>{f.name}</h3>
+                <p style={{ fontSize: 13, color: "#7C3AED", fontWeight: 600, marginBottom: 18 }}>
                   {f.role}
                 </p>
-                <p
-                  style={{
-                    fontSize: 15,
-                    lineHeight: 1.8,
-                    color: "#555",
-                    marginBottom: 20,
-                    flex: 1,
-                  }}
-                >
-                  {f.bio}
-                </p>
-                <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: "auto" }}>
                   <a
-                    href={f.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={`tel:${f.phone.replace(/\s+/g, "")}`}
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: 6,
-                      padding: "8px 14px",
-                      borderRadius: 8,
-                      backgroundColor: "rgba(124,58,237,0.08)",
-                      color: "#7C3AED",
-                      fontSize: 13,
-                      fontWeight: 600,
+                      gap: 8,
+                      color: "#555",
+                      fontSize: 14,
                       textDecoration: "none",
-                      transition: "background 0.2s",
                     }}
                   >
-                    <Linkedin style={{ width: 16, height: 16 }} />
-                    LinkedIn
+                    <Phone style={{ width: 15, height: 15, color: "#7C3AED", flexShrink: 0 }} />
+                    {f.phone}
                   </a>
                   <a
                     href={`mailto:${f.email}`}
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: 6,
-                      padding: "8px 14px",
-                      borderRadius: 8,
-                      backgroundColor: "rgba(124,58,237,0.08)",
-                      color: "#7C3AED",
-                      fontSize: 13,
-                      fontWeight: 600,
+                      gap: 8,
+                      color: "#555",
+                      fontSize: 14,
                       textDecoration: "none",
-                      transition: "background 0.2s",
+                      wordBreak: "break-all",
                     }}
                   >
-                    <Mail style={{ width: 16, height: 16 }} />
+                    <Mail style={{ width: 15, height: 15, color: "#7C3AED", flexShrink: 0 }} />
                     {f.email}
                   </a>
                 </div>
               </motion.div>
             ))}
-          </div>
-
-          <div
-            style={{
-              marginTop: 32,
-              textAlign: "center",
-              padding: 24,
-              borderRadius: 12,
-              backgroundColor: "rgba(124,58,237,0.04)",
-              border: "1px solid rgba(124,58,237,0.08)",
-            }}
-          >
-            <p style={{ fontSize: 14, fontWeight: 600, color: "#2e2d2d", marginBottom: 2 }}>Phone</p>
-            <p style={{ fontSize: 15, color: "#555", margin: 0 }}>+91 8608208309</p>
           </div>
         </motion.div>
       </section>

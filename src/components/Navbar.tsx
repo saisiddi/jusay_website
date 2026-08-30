@@ -121,6 +121,30 @@ const Navbar = () => {
                     {item.label}
                   </a>
                 ))}
+                <Link
+                  to="/about"
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    fontSize: 14,
+                    color: "rgba(46,45,45,0.55)",
+                    padding: "6px 14px",
+                    fontWeight: 500,
+                    borderRadius: 8,
+                    textDecoration: "none",
+                    transition: "all 0.2s",
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#7C3AED";
+                    e.currentTarget.style.backgroundColor = "rgba(124,58,237,0.06)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "rgba(46,45,45,0.55)";
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }}
+                >
+                  About us
+                </Link>
               </div>
               </div>
 
@@ -316,6 +340,21 @@ const Navbar = () => {
                 {item.label}
               </a>
             ))}
+            <Link
+              to="/about"
+              onClick={() => setMobileOpen(false)}
+              style={{
+                fontSize: 14,
+                color: "rgba(46,45,45,0.7)",
+                fontWeight: 500,
+                padding: "8px 0",
+                borderBottom: "1px solid rgba(0,0,0,0.05)",
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+            >
+              About us
+            </Link>
             <a
               href="/login"
               onClick={(e) => {
