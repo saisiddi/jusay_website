@@ -1,73 +1,49 @@
-# Welcome to your Lovable project
+# Jusay — website
 
-## Project info
+Marketing site and self-serve account portal for Jusay, a system-wide voice layer for your OS: speak naturally and get polished text in any app.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Stack
 
-## How can I edit this code?
+- [Vite](https://vitejs.dev) 5
+- [React](https://react.dev) 18 + TypeScript
+- [Tailwind CSS](https://tailwindcss.com) with [shadcn/ui](https://ui.shadcn.com)
+- [framer-motion](https://motion.dev) for animation
+- [Supabase](https://supabase.com) for auth and entitlements
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Getting started
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+npm install     # install dependencies
+npm run dev     # dev server on http://localhost:8080
+npm run build   # production build into dist/
+npx vitest run  # run the test suite once
 ```
 
-**Edit a file directly in GitHub**
+## Routes
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+| Route | Purpose |
+| --- | --- |
+| `/` | Landing page |
+| `/login` | Email auth |
+| `/account` | Plan, entitlement and download |
+| `/auth/web-callback` | Supabase redirect target for the web session |
+| `/about` | About Jusay |
+| `/privacy` | Privacy policy |
+| `/terms` | Terms of service |
+| `/contact` | Contact |
+| `/modes/ai`, `/modes/grammar`, `/modes/notes`, `/modes/rewrite` | Mode detail pages |
 
-**Use GitHub Codespaces**
+The desktop OAuth hand-off lives at the static `public/auth/callback/` page rather than a SPA route, because it relays tokens to the local desktop app.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Environment
 
-## What technologies are used for this project?
+Copy `.env.example` to `.env` and set:
 
-This project is built with:
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Both are browser-safe. The anon key is a public key guarded by Supabase Row Level Security — never put a service-role key in a `VITE_` variable. `src/lib/supabase.ts` also carries these values as inline fallbacks so the deployed site works before the env vars are configured.
 
-## How can I deploy this project?
+## Database
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+`supabase/stats.sql` is run once by hand in the Supabase SQL Editor to create the public download and view counters. It is idempotent, so re-running it is safe.
