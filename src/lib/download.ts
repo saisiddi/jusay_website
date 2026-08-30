@@ -4,12 +4,11 @@ import { getSession } from "@/lib/supabase";
 /**
  * Canonical Windows installer URL.
  *
- * This points at a live Firebase Storage object; the path, the `alt=media`
- * query and the download token are all load-bearing. Never rename, re-encode
- * or "tidy" this string — it must stay byte-identical or downloads 404.
+ * Served as a static asset from the site's own `public/` folder, so it ships
+ * with each deploy. If you move the binary back to object storage, swap this
+ * for the full URL.
  */
-export const DOWNLOAD_URL =
-  "https://firebasestorage.googleapis.com/v0/b/juskoe-7698d.firebasestorage.app/o/Juskoe%20Setup%201.0.0.exe?alt=media&token=edca097e-fa85-4cca-8471-b59d29832104";
+export const DOWNLOAD_URL = "/Jusay-Setup-1.0.0.exe";
 
 /** Only one build is shipped today, but the intent is stored as a target. */
 export type DownloadTarget = "windows";
