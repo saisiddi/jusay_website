@@ -4,7 +4,6 @@ import Hero from "@/components/Hero";
 import AppMarquee from "@/components/AppMarquee";
 import CommunityStats from "@/components/CommunityStats";;
 import { ThreeModes, BuiltForYou } from "@/components/Features";
-import HowItWorks from "@/components/HowItWorks";
 
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
@@ -54,13 +53,6 @@ const Index = () => {
         <section style={{ backgroundColor: "#f5f3ff" }}>
           <BuiltForYou />
         </section>
-
-        {/* How It Works — plain white */}
-        <section style={{ backgroundColor: "#ffffff" }}>
-          <HowItWorks />
-        </section>
-
-
 
         {/* Testimonials */}
         <section style={{ backgroundColor: "#faf9ff" }}>

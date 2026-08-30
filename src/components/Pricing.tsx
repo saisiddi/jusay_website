@@ -8,7 +8,10 @@ import { requestDownload } from "@/lib/download";
 import { useAuth } from "@/hooks/useAuth";
 
 /* The one canonical offer line. Keep this string in sync with /checkout/. */
-const OFFER_LINE = "Pay 1 month and Get 1 month FREE";
+const OFFER_LINE = "Pay 1 month, get 1 month FREE";
+
+/* Urgency line for the limited-time launch price (₹349 → ₹49). */
+const DEAL_LINE = "🔥 Limited-time launch deal — ends soon, grab it!";
 
 /* Shown on the Pro card once the canonical entitlement rule says the visitor
    already has Pro. It reads as a statement, not an offer, and is rendered
@@ -50,28 +53,21 @@ const getPlans = (isIndia: boolean) => [
     price: isIndia ? "₹0" : "$0",
     period: "forever",
     monthlyPrice: null,
+    originalPrice: null,
 
     icon: Zap,
     color: "#2e2d2d",
     popular: false,
     cta: "Free Download",
     usageItems: [
-      "25 uses/day total",
-      "10 AI (F7)",
-      "15 Grammar (F8)",
-      "200 uses/month (combined)",
+      "25 uses/day (10 AI · 15 Grammar)",
+      "200 uses/month total",
     ],
     features: [
       "Speak → paste in any app",
       "Select text → speak to rewrite",
       "AI + grammar improvements",
-      "Prompt generation (limited)",
-      "App-aware formatting",
-      "Local notes",
-      "Local dictionary (custom words)",
-      "Local snippets (saved text)",
-
-      "No cloud sync",
+      "Local notes, dictionary & snippets",
     ],
   },
   {
@@ -81,24 +77,21 @@ const getPlans = (isIndia: boolean) => [
     price: null,
     period: null,
     monthlyPrice: isIndia ? "₹49" : "$10",
+    originalPrice: isIndia ? "₹349" : "$29",
 
     icon: Crown,
     color: "#7C3AED",
     popular: true,
     cta: "Upgrade to Pro",
     usageItems: [
-      "Unlimited AI (F7)",
-      "Unlimited Grammar (F8)",
-      "Longer, more detailed outputs",
+      "Unlimited AI & Grammar",
+      "Longer, detailed outputs",
       "Priority processing",
     ],
     features: [
       "Everything in Free, plus:",
-      "Cloud sync (notes, dictionary, snippets)",
-      "Cross-device access",
+      "Cloud sync across devices",
       "Higher-quality rewrites",
-      "Advanced prompt generation",
-      "Stronger app-context optimization",
       "Early access to new features",
     ],
   },
@@ -283,7 +276,7 @@ const Pricing = () => {
                   }
                 >
                   {/* ── Fixed-height top zone (label + price + desc) ── */}
-                  <div style={{ minHeight: 100 }}>
+                  <div style={{ minHeight: 128 }}>
                     {/* Plan label */}
                     <div className="flex items-center gap-2 mb-3">
                       <div
@@ -308,7 +301,12 @@ const Pricing = () => {
                     </div>
 
                     {/* Price */}
-                    <div className="flex items-baseline gap-1 mb-1">
+                    <div className="flex items-baseline gap-1.5 mb-1">
+                      {isPro && plan.originalPrice && (
+                        <span className="text-xl font-bold text-[#2e2d2d]/30 line-through">
+                          {plan.originalPrice}
+                        </span>
+                      )}
                       <motion.span
                         key={displayPrice}
                         initial={{ opacity: 0, y: -8 }}
@@ -323,12 +321,14 @@ const Pricing = () => {
                     </div>
 
                     {isPro && (
-                      <p
-                        className="text-[11px] font-bold mb-1"
-                        style={{ color: "#7C3AED" }}
-                      >
-                        {OFFER_LINE}
-                      </p>
+                      <>
+                        <p className="text-[12px] font-black text-[#7C3AED] leading-tight">
+                          {DEAL_LINE}
+                        </p>
+                        <p className="text-[11px] font-semibold text-[#2e2d2d]/55">
+                          {OFFER_LINE}
+                        </p>
+                      </>
                     )}
 
                   </div>
