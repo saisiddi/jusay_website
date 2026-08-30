@@ -3,7 +3,14 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ShinyText from "@/components/ShinyText";
+import { requestDownload } from "@/lib/download";
 import { Zap, Globe, Heart, Phone, Mail } from "lucide-react";
+
+/* Download is login-gated, matching every other download button on the site. */
+const handleDownloadClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+  void requestDownload();
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -62,10 +69,18 @@ const About = () => {
 
       {/* ── Hero ── */}
       <section
-        className="bg-grid px-6 pt-36 pb-20 text-center"
+        className="bg-grid relative overflow-hidden px-6 pt-36 pb-20 text-center"
         style={{ background: "linear-gradient(180deg, #ede9fe 0%, #faf9ff 100%)" }}
       >
-        <div className="max-w-3xl mx-auto">
+        {/* Decorative layers — same treatment as the home page sections */}
+        <div
+          className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%)" }}
+        />
+        <div className="absolute top-24 left-[8%] w-72 h-44 rounded-full bg-[rgba(124,58,237,0.08)] blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 right-[10%] w-60 h-40 rounded-full bg-[rgba(167,139,250,0.10)] blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 max-w-3xl mx-auto">
           <motion.span
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -186,7 +201,9 @@ const About = () => {
             </p>
           </motion.div>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Two columns keep the cards wide enough for the full email on one
+              line, which four narrow columns could not do. */}
+          <div className="grid gap-5 md:grid-cols-2 max-w-4xl mx-auto">
             {team.map((m, i) => (
               <motion.div
                 key={m.name}
@@ -196,35 +213,79 @@ const About = () => {
                 variants={fadeUp}
                 custom={i + 1}
                 whileHover={{ y: -4 }}
-                className="flex flex-col rounded-2xl bg-white border border-[rgba(124,58,237,0.1)] shadow-card p-6 transition-all duration-300"
+                className="flex items-start gap-4 h-full rounded-2xl bg-white border border-[rgba(124,58,237,0.1)] shadow-card p-6 transition-all duration-300"
               >
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-black mb-4"
+                  className="w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-sm font-black"
                   style={{ background: "rgba(124,58,237,0.1)", color: "#7C3AED" }}
                 >
                   {initials(m.name)}
                 </div>
-                <h3 className="text-base font-bold text-[#2e2d2d] leading-tight">{m.name}</h3>
-                <span
-                  className="inline-flex self-start mt-2 mb-4 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                  style={{ background: "rgba(124,58,237,0.1)", color: "#7C3AED" }}
-                >
-                  {m.role}
-                </span>
-                <div className="mt-auto flex flex-col gap-2">
-                  <a href={`tel:${m.phone.replace(/\s+/g, "")}`} className="flex items-center gap-2 text-[13px] text-[#2e2d2d]/65 hover:text-[#7C3AED] transition-colors">
-                    <Phone className="w-4 h-4 shrink-0" style={{ color: "#7C3AED" }} />
-                    {m.phone}
-                  </a>
-                  <a href={`mailto:${m.email}`} className="flex items-center gap-2 text-[13px] text-[#2e2d2d]/65 hover:text-[#7C3AED] transition-colors break-all">
-                    <Mail className="w-4 h-4 shrink-0" style={{ color: "#7C3AED" }} />
-                    {m.email}
-                  </a>
+                <div className="min-w-0">
+                  <h3 className="text-base font-bold text-[#2e2d2d] leading-tight">{m.name}</h3>
+                  <span
+                    className="inline-flex mt-1.5 mb-3 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    style={{ background: "rgba(124,58,237,0.1)", color: "#7C3AED" }}
+                  >
+                    {m.role}
+                  </span>
+                  <div className="flex flex-col gap-1.5">
+                    <a
+                      href={`tel:${m.phone.replace(/\s+/g, "")}`}
+                      className="flex items-center gap-2 text-[13px] text-[#2e2d2d]/65 hover:text-[#7C3AED] transition-colors"
+                    >
+                      <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: "#7C3AED" }} />
+                      {m.phone}
+                    </a>
+                    <a
+                      href={`mailto:${m.email}`}
+                      className="flex items-center gap-2 text-[13px] text-[#2e2d2d]/65 hover:text-[#7C3AED] transition-colors"
+                    >
+                      <Mail className="w-3.5 h-3.5 shrink-0" style={{ color: "#7C3AED" }} />
+                      <span className="truncate">{m.email}</span>
+                    </a>
+                  </div>
                 </div>
               </motion.div>
             ))}
           </div>
         </div>
+      </section>
+
+      {/* ── Closing CTA — mirrors the home page's download prompt ── */}
+      <section className="bg-grid relative overflow-hidden px-6 py-20 md:py-24" style={{ backgroundColor: "#ede9fe" }}>
+        <div
+          className="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(124,58,237,0.14) 0%, transparent 70%)" }}
+        />
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          custom={0}
+          className="relative z-10 max-w-2xl mx-auto text-center"
+        >
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#2e2d2d]">
+            Ready to stop typing?
+          </h2>
+          <p className="text-[#2e2d2d]/50 text-lg mt-3 mb-8">
+            Download Jusay and start speaking in any app — free to try.
+          </p>
+          <motion.a
+            href="/login"
+            onClick={handleDownloadClick}
+            whileHover={{ scale: 1.04, boxShadow: "0 16px 50px rgba(124,58,237,0.3)" }}
+            whileTap={{ scale: 0.97 }}
+            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm font-bold text-white"
+            style={{ borderRadius: 10, background: "linear-gradient(135deg, #7C3AED, #5b21b6)" }}
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801" />
+            </svg>
+            Download for Windows
+          </motion.a>
+        </motion.div>
       </section>
 
       <Footer />

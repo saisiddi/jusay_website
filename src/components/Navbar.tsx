@@ -77,7 +77,10 @@ const Navbar = () => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                gap: 28,
+                // Matches the 4px gap between the nav links, so the spacing
+                // from "About us" to "Sign in" is identical to link-to-link
+                // spacing instead of opening a gap in the middle of the pill.
+                gap: 4,
                 padding: "14px 20px",
               }}
             >
