@@ -1,5 +1,5 @@
 import { animate, motion, useInView } from "framer-motion";
-import { Download, Crown } from "lucide-react";
+import { Users, Crown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { fetchPublicStats, type PublicStats } from "@/lib/stats";
 
@@ -45,14 +45,14 @@ const MiniWave = ({ color }: { color: string }) => (
 
 type StatCard = {
   key: string;
-  icon: typeof Download;
+  icon: typeof Users;
   color: string;
   label: string;
   sub: string;
   value: number;
 };
 
-const DownloadStats = () => {
+const CommunityStats = () => {
   const [stats, setStats] = useState<PublicStats | null>(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -74,11 +74,11 @@ const DownloadStats = () => {
 
   const meta: Omit<StatCard, "value">[] = [
     {
-      key: "downloads",
-      icon: Download,
+      key: "members",
+      icon: Users,
       color: "#7C3AED",
-      label: "Downloads and counting",
-      sub: "Installs completed across Windows",
+      label: "Members and counting",
+      sub: "Signed up with Google or email",
     },
     {
       key: "pro",
@@ -90,7 +90,7 @@ const DownloadStats = () => {
   ];
 
   const valueFor = (key: string): number | null =>
-    key === "downloads" ? stats?.downloads ?? null : stats?.proMembers ?? null;
+    key === "members" ? stats?.members ?? null : stats?.proMembers ?? null;
 
   // While loading, show both placeholders; once loaded, drop any metric whose
   // RPC didn't return (e.g. the pro-member function isn't installed yet).
@@ -164,4 +164,4 @@ const DownloadStats = () => {
   );
 };
 
-export default DownloadStats;
+export default CommunityStats;
