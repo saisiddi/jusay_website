@@ -6,6 +6,14 @@
     overflow: hidden;
 }
 
+/* Navbar variant: full-width pill on mobile, hug-content pill on desktop so the
+   links and actions sit together with no dead space in the middle. */
+@media (min-width: 768px) {
+    .star-border-container.nav-fit {
+        width: auto;
+    }
+}
+
 .border-gradient-bottom {
     position: absolute;
     width: 400%;

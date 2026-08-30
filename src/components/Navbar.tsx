@@ -68,14 +68,16 @@ const Navbar = () => {
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          style={{ width: "100%", maxWidth: 680 }}
+          className="w-full md:w-auto"
+          style={{ maxWidth: 760 }}
         >
-          <StarBorder color="#7C3AED" speed="6s">
+          <StarBorder color="#7C3AED" speed="6s" className="nav-fit">
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
+                gap: 28,
                 padding: "14px 20px",
               }}
             >
