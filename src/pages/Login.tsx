@@ -6,7 +6,7 @@ import Wordmark from "@/components/Wordmark";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
 import { hasPendingDownload, resumePendingDownload } from "@/lib/download";
-import { startProCheckout, takeCheckoutIntent } from "@/lib/checkout";
+import { rememberCheckoutIntent, startProCheckout, takeCheckoutIntent } from "@/lib/checkout";
 
 /** Official Google mark (Simple Icons / Google branding guidelines). */
 const GoogleIcon = () => (
@@ -108,6 +108,22 @@ const Login = () => {
     return () => {
       document.title = "Jusay";
     };
+  }, []);
+
+  // Deep link for shared links and QR codes: /login?upgrade=1 records the
+  // upgrade intent up front, so a first-time visitor only has to tap
+  // "Continue with Google" and the Pro checkout opens by itself. Declared
+  // before the session effect below so the intent is already stored when that
+  // effect calls takeCheckoutIntent(), and it rides out the Google redirect in
+  // sessionStorage exactly like the download intent does.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const wantsUpgrade = params.get("upgrade");
+    if (wantsUpgrade === "1" || wantsUpgrade === "pro_monthly") {
+      rememberCheckoutIntent("pro_monthly");
+    } else if (wantsUpgrade === "pro_annual") {
+      rememberCheckoutIntent("pro_annual");
+    }
   }, []);
 
   // Already signed in (or just came back from Google) → finish what they started.
