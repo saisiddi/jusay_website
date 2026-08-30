@@ -79,6 +79,8 @@ const Navbar = () => {
                 padding: "14px 20px",
               }}
             >
+              {/* Left: logo + nav links grouped together */}
+              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
               {/* Logo */}
               <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", flexShrink: 0, userSelect: "none", WebkitUserSelect: "none" }}>
                 <img src="/jusay-mark.png" alt="Jusay" style={{ height: 28, width: 28, userSelect: "none", WebkitUserSelect: "none", WebkitUserDrag: "none" }} draggable={false} />
@@ -119,6 +121,7 @@ const Navbar = () => {
                     {item.label}
                   </a>
                 ))}
+              </div>
               </div>
 
               {/* Right side */}
