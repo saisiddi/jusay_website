@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import { CalendarClock, Crown, Loader2, LogOut, Mail, Sparkles, User as UserIcon } from "lucide-react";
@@ -7,16 +7,23 @@ import Footer from "@/components/Footer";
 import Wordmark from "@/components/Wordmark";
 import { useAuth } from "@/hooks/useAuth";
 import { startProCheckout } from "@/lib/checkout";
-import { supabase } from "@/lib/supabase";
 
 /** The one canonical offer line. Keep in sync with src/components/Pricing.tsx. */
 const OFFER_LINE = "Pay 1 month and Get 1 month FREE";
 
-/** Read-only shape of the `subscriptions` row we surface here. */
-interface SubscriptionRow {
-  status: string | null;
-  current_period_end: string | null;
-}
+/**
+ * Post-payment sync schedule, in milliseconds between attempts.
+ *
+ * The static checkout page sends the browser here with `?upgraded=1` as soon as
+ * `confirm-payment` returns, but that function (and the Razorpay webhook behind
+ * it) can finish writing `profiles`/`subscriptions` a beat later. So we re-run
+ * the canonical resolution on a backoff instead of trusting the query param.
+ * Sum is 10s: the first check is immediate, then 1s, 1.5s, 2s, 2.5s, 3s.
+ */
+const UPGRADE_POLL_DELAYS_MS = [0, 1000, 1500, 2000, 2500, 3000];
+
+/** Query flag the checkout page appends after a successful confirm-payment. */
+const UPGRADED_PARAM = "upgraded";
 
 const formatDate = (iso: string): string => {
   const date = new Date(iso);
@@ -30,11 +37,13 @@ const formatDate = (iso: string): string => {
 
 const Account = () => {
   const navigate = useNavigate();
-  const { user, profile, loading, isPro, signOut } = useAuth();
+  const { user, profile, loading, isPro, entitlement, refreshEntitlement, signOut } = useAuth();
   const reduceMotion = useReducedMotion();
   const [upgrading, setUpgrading] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
-  const [subscription, setSubscription] = useState<SubscriptionRow | null>(null);
+  /** True while we are waiting for a just-completed payment to land in the DB. */
+  const [activating, setActivating] = useState(false);
+  const pollStarted = useRef(false);
 
   useEffect(() => {
     document.title = "Your account — Jusay";
@@ -48,51 +57,72 @@ const Account = () => {
     if (!loading && !user) navigate("/login", { replace: true });
   }, [loading, user, navigate]);
 
-  // Read-only look at the billing period. RLS limits this to the caller's rows.
-  useEffect(() => {
-    if (!user) {
-      setSubscription(null);
-      return;
+  /**
+   * Post-payment sync. `?upgraded=1` only tells us to go looking; Pro is shown
+   * strictly because `resolveEntitlement` says so.
+   */
+  const pollForUpgrade = useCallback(async () => {
+    setActivating(true);
+    try {
+      for (const delay of UPGRADE_POLL_DELAYS_MS) {
+        if (delay > 0) await new Promise((resolve) => window.setTimeout(resolve, delay));
+        const resolved = await refreshEntitlement();
+        if (resolved.isPro) return;
+      }
+      // Still not Pro after ~10s. The webhook may yet land; a refresh or tab
+      // focus will pick it up, and the entitlement rule never shows a false Pro.
+      console.warn(
+        "[jusay] payment reported success but the entitlement is still free after polling."
+      );
+    } finally {
+      setActivating(false);
     }
-    let active = true;
-    void supabase
-      .from("subscriptions")
-      .select("status, current_period_end")
-      .eq("user_id", user.id)
-      .order("current_period_end", { ascending: false, nullsFirst: false })
-      .limit(1)
-      .maybeSingle()
-      .then(({ data, error }) => {
-        if (!active) return;
-        if (error) {
-          console.error("[jusay] could not load subscription:", error.message);
-          setSubscription(null);
-          return;
-        }
-        setSubscription((data as SubscriptionRow | null) ?? null);
-      });
-    return () => {
-      active = false;
-    };
-  }, [user]);
+  }, [refreshEntitlement]);
+
+  useEffect(() => {
+    if (loading || !user || pollStarted.current) return;
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get(UPGRADED_PARAM) !== "1") return;
+    pollStarted.current = true;
+
+    // Strip the flag straight away so a reload or a shared link cannot re-trigger it.
+    params.delete(UPGRADED_PARAM);
+    const query = params.toString();
+    window.history.replaceState(
+      {},
+      document.title,
+      `${window.location.pathname}${query ? `?${query}` : ""}`
+    );
+
+    void pollForUpgrade();
+  }, [loading, user, pollForUpgrade]);
 
   const metadata = (user?.user_metadata ?? {}) as Record<string, string | undefined>;
   const email = profile?.email ?? user?.email ?? "";
   const fullName = profile?.full_name ?? metadata.full_name ?? metadata.name ?? "";
   const avatarUrl = profile?.avatar_url ?? metadata.avatar_url ?? metadata.picture ?? "";
 
+  // Billing period comes from the same resolution that decided `isPro`, so the
+  // badge and the date can never disagree.
   // "Renews on" while the subscription is live, "Access until" once cancelled.
-  const periodEnd = subscription?.current_period_end
-    ? formatDate(subscription.current_period_end)
+  const periodEnd = entitlement.currentPeriodEnd
+    ? formatDate(entitlement.currentPeriodEnd)
     : "";
-  const renewing = subscription?.status === "active" || subscription?.status === "trialing";
+  const renewing = entitlement.source === "subscription";
   const periodLabel = periodEnd
     ? `${renewing ? "Renews on" : "Access until"} ${periodEnd}`
     : "";
 
   const handleUpgrade = async () => {
     setUpgrading(true);
-    const started = await startProCheckout({ plan: "pro_monthly", fullName });
+    const started = await startProCheckout({
+      plan: "pro_monthly",
+      fullName,
+      // Already Pro: startProCheckout stops before create-subscription and we
+      // just re-render this page with the fresh state.
+      onAlreadyPro: () => void refreshEntitlement(),
+    });
     // On success the browser navigates away; on failure re-enable the button.
     if (!started) setUpgrading(false);
   };
@@ -268,12 +298,14 @@ const Account = () => {
                 </div>
                 <div>
                   <p style={{ fontSize: 16, fontWeight: 800, color: "#2e2d2d" }}>
-                    {isPro ? "Pro" : "Free"}
+                    {isPro ? "Pro" : activating ? "Activating…" : "Free"}
                   </p>
                   <p style={{ fontSize: 12, color: "rgba(46,45,45,0.5)" }}>
                     {isPro
                       ? "Unlimited AI and grammar, cloud sync across devices."
-                      : "25 uses/day. Upgrade for unlimited AI, grammar and cloud sync."}
+                      : activating
+                        ? "Your payment went through. Switching your plan over now."
+                        : "25 uses/day. Upgrade for unlimited AI, grammar and cloud sync."}
                   </p>
                 </div>
               </div>
@@ -295,6 +327,27 @@ const Account = () => {
                 >
                   <Sparkles style={{ width: 14, height: 14 }} aria-hidden="true" />
                   Pro is active
+                </span>
+              ) : activating ? (
+                /* Payment succeeded, entitlement not visible yet. No upgrade
+                   button here — offering one would invite a second charge. */
+                <span
+                  role="status"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "8px 14px",
+                    borderRadius: 8,
+                    background: "rgba(124,58,237,0.08)",
+                    border: "1px solid rgba(124,58,237,0.25)",
+                    color: "#5b21b6",
+                    fontSize: 12,
+                    fontWeight: 700,
+                  }}
+                >
+                  <Loader2 className="animate-spin" style={{ width: 14, height: 14 }} />
+                  Activating your Pro…
                 </span>
               ) : (
                 <button
@@ -351,7 +404,7 @@ const Account = () => {
               </p>
             )}
 
-            {!isPro && (
+            {!isPro && !activating && (
               <p style={{ fontSize: 11, color: "rgba(46,45,45,0.4)", marginTop: 12, lineHeight: 1.6 }}>
                 New Pro users get the launch offer: {OFFER_LINE}. ₹49 today covers 2 months,
                 then ₹49/month. Cancel anytime from Jusay app settings.

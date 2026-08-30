@@ -173,6 +173,24 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
     var nextChargeDate=new Date(Date.now()+60*24*60*60*1000)
         .toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
 
+    // How long the success copy stays on screen before we hand back to the SPA.
+    var HANDBACK_DELAY_MS=2200;
+    // `src=web` is set only by jusay_website/src/lib/checkout.ts. The desktop
+    // app opens this same page (src/main/razorpay.ts) without it and keeps its
+    // "you can close this page" ending.
+    var fromWeb=(p.get('src')==='web');
+    // After confirm-payment succeeds, return to the app at /account?upgraded=1.
+    // The account page re-resolves the entitlement (and polls, because the
+    // webhook write can land a moment later) so Pro shows up without a
+    // sign-out/sign-in. `upgraded=1` is only a hint to go looking — the SPA
+    // never renders Pro on the strength of the query param alone.
+    function backToAccount(){
+        if(!fromWeb) return;
+        setTimeout(function(){
+            location.replace(location.origin+'/account?upgraded=1');
+        },HANDBACK_DELAY_MS);
+    }
+
     if(!sid||!kid){
         btn.textContent='Invalid Link';
         document.getElementById('statusMsg').textContent='Missing payment details. Try again from Jusay.';
@@ -261,6 +279,7 @@ cursor:pointer;color:#2e2d2d;transition:background 0.15s}
                     if(data.success){
                         btn.textContent=isTrial?'Free Trial Active!':'You are now Pro!';
                         document.getElementById('statusMsg').textContent=isTrial?'1 month free! You can cancel anytime from Jusay settings.':(bonusMonth?'2 months of Pro are active. Next ₹49 on '+nextChargeDate+'.':'Welcome to Jusay Pro! You can close this page.');
+                        backToAccount();
                     } else {
                         btn.textContent=isTrial?'Trial Activated':'Payment Successful';
                         document.getElementById('statusMsg').textContent='Pro will activate shortly. You can close this page.';

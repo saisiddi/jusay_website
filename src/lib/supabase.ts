@@ -1,7 +1,7 @@
 import { createClient, type Session, type SupabaseClient } from "@supabase/supabase-js";
 
 /**
- * Browser Supabase client for the JUSAY website.
+ * Browser Supabase client for the Jusay website.
  *
  * The URL and anon key are public by design (the anon key is guarded by Row Level
  * Security). They are read from Vite env vars with inline fallbacks so the site

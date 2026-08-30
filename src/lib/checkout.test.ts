@@ -107,3 +107,26 @@ describe("checkout intent", () => {
     expect(takeCheckoutIntent()).toBeNull();
   });
 });
+
+describe("web-initiated marker", () => {
+  const base = {
+    subscriptionId: "sub_123",
+    keyId: "rzp_test_abc",
+    email: "aish@jusay.in",
+    name: "Aishwanth",
+    plan: "pro_monthly" as const,
+  };
+
+  // The checkout page hands the browser back to /account?upgraded=1 only for
+  // web-initiated payments. Desktop opens the same page without this marker.
+  it("tags every website checkout with src=web", () => {
+    const url = new URL(buildCheckoutUrl("https://jusaywebsite.vercel.app", base));
+    expect(url.searchParams.get("src")).toBe("web");
+  });
+
+  it("keeps the marker alongside the offer flag", () => {
+    const url = new URL(buildCheckoutUrl("https://x.dev", { ...base, bonusMonth: true }));
+    expect(url.searchParams.get("src")).toBe("web");
+    expect(url.searchParams.get("bonusMonth")).toBe("1");
+  });
+});

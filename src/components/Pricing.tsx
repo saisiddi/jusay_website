@@ -1,18 +1,23 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Zap, Crown, Star, Globe, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ShinyText from "./ShinyText";
 import { startProCheckout } from "@/lib/checkout";
 import { requestDownload } from "@/lib/download";
+import { useAuth } from "@/hooks/useAuth";
 
 /* The one canonical offer line. Keep this string in sync with /checkout/. */
 const OFFER_LINE = "Pay 1 month and Get 1 month FREE";
 
-/* Pro CTA → shared web checkout flow (signs the user in first if needed) */
-const handleProCta = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  e.preventDefault();
-  void startProCheckout({ plan: "pro_monthly" });
-};
+/* Shown on the Pro card once the canonical entitlement rule says the visitor
+   already has Pro. It reads as a statement, not an offer, and is rendered
+   non-actionable so a second checkout can never be started from here. */
+const ALREADY_PRO_LABEL = "Already in Pro";
+
+/* Neutral label while the entitlement is still resolving, so a paying user is
+   never shown "Upgrade to Pro" for a frame. */
+const CHECKING_LABEL = "Checking your plan…";
 
 /* Free CTA → login-gated download; resumes automatically after sign-in */
 const handleDownloadClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -103,6 +108,37 @@ const getPlans = (isIndia: boolean) => [
 const Pricing = () => {
   const isIndia = useIsIndia();
   const plans = getPlans(isIndia);
+  const navigate = useNavigate();
+
+  /* Single source of truth for Pro. `hasPro` is the canonical entitlement from
+     src/lib/entitlement.ts, not `profile.plan`. `planPending` covers the first
+     paint, before the resolution has come back. */
+  const { isPro: hasPro, loading: planPending, profile } = useAuth();
+
+  /* The Pro CTA is inert whenever we know (or don't yet know) that charging
+     again would be wrong. */
+  const proCtaLocked = hasPro || planPending;
+
+  /** Pro card label: neutral while resolving, a statement once Pro, else the offer. */
+  const proCtaLabel = (upgradeLabel: string) =>
+    planPending ? CHECKING_LABEL : hasPro ? ALREADY_PRO_LABEL : upgradeLabel;
+
+  /* Pro CTA → shared web checkout flow (signs the user in first if needed).
+     Never reached while `proCtaLocked`, and startProCheckout re-checks the
+     entitlement itself as a second, database-level guard. */
+  const handleProCta = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (planPending) return;
+    if (hasPro) {
+      navigate("/account");
+      return;
+    }
+    void startProCheckout({
+      plan: "pro_monthly",
+      fullName: profile?.full_name ?? null,
+      onAlreadyPro: () => navigate("/account"),
+    });
+  };
 
   return (
     <section id="pricing" className="relative py-20 md:py-28 px-6 overflow-hidden">
@@ -301,16 +337,20 @@ const Pricing = () => {
                   <motion.a
                     href={isPro ? "/account" : "/login"}
                     onClick={isPro ? handleProCta : handleDownloadClick}
+                    aria-disabled={isPro && proCtaLocked ? true : undefined}
+                    aria-busy={isPro && planPending ? true : undefined}
                     whileHover={
                       isPro
-                        ? {
-                          scale: 1.03,
-                          boxShadow:
-                            "0 16px 50px rgba(124,58,237,0.3)",
-                        }
+                        ? proCtaLocked
+                          ? undefined
+                          : {
+                            scale: 1.03,
+                            boxShadow:
+                              "0 16px 50px rgba(124,58,237,0.3)",
+                          }
                         : { scale: 1.03, backgroundColor: "#2e2d2d", color: "#ffffff" }
                     }
-                    whileTap={{ scale: 0.97 }}
+                    whileTap={isPro && proCtaLocked ? undefined : { scale: 0.97 }}
                     className="inline-flex items-center justify-center w-full py-3 text-sm font-bold mb-5 transition-all"
                     style={{
                       borderRadius: 10,
@@ -320,6 +360,8 @@ const Pricing = () => {
                             "linear-gradient(135deg, #7C3AED, #5b21b6)",
                           color: "#fff",
                           border: "none",
+                          cursor: proCtaLocked ? "default" : "pointer",
+                          opacity: planPending ? 0.65 : 1,
                         }
                         : {
                           background: "transparent",
@@ -329,7 +371,7 @@ const Pricing = () => {
                     }}
                   >
                     {isPro && <Sparkles className="w-4 h-4 mr-2" />}
-                    {plan.cta}
+                    {isPro ? proCtaLabel(plan.cta) : plan.cta}
                   </motion.a>
 
                   {/* Divider */}
